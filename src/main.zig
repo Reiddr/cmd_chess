@@ -13,7 +13,10 @@ pub fn main() !void {
     var bw = std.io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
+    const green = "\x1b[0;32m";
+    const reset = "\x1b[0m";
+    const knight = '\u{2658}';
+    try stdout.print("{s}Run `zig build test` to run the {u}tests.\n{s}", .{green, knight, reset});
 
     try bw.flush(); // Don't forget to flush!
 }
