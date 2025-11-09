@@ -2,27 +2,12 @@
 //! you are building an executable. If you are making a library, the convention
 //! is to delete this file and start with root.zig instead.
 
+
+const std = @import("std");
+const lib = @import("cmd_chess_lib");
+
 pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
-
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
-
-    // const green = "\x1b[0;32m";
-    // const black = "\x1b[0;30m";
-    const white = "\x1b[0;37m";
-    const reset = "\x1b[0m";
-    const brown_bg = "\x1b[48;5;94m";
-    const knight_w = '\u{2658}';
-    const knight_b = '\u{265E}';
-    try stdout.print("knight_w: {s}{s}{u}{s} knight_b: {s}{s}{u}{s}\n", .{brown_bg, white, knight_b, reset, brown_bg, white, knight_w, reset});
-
-    try bw.flush(); // Don't forget to flush!
+    _ = try lib.print_board(1);
 }
 
 test "simple test" {
@@ -46,8 +31,3 @@ test "fuzz example" {
     };
     try std.testing.fuzz(Context{}, Context.testOne, .{});
 }
-
-const std = @import("std");
-
-/// This imports the separate module containing `root.zig`. Take a look in `build.zig` for details.
-const lib = @import("cmd_chess_lib");
