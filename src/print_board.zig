@@ -12,8 +12,9 @@ pub fn print_board(a: u64) !i8 {
     const reset = "\x1b[0m";
     const brown_bg = "\x1b[48;5;94m";
     const grey_bg = "\x1b[48;5;250m";
-    // const knight_w = '\u{2658}';
+    const knight_w = '\u{2658}';
     const knight_b = '\u{265E}';
+    const n:u64 = 0x01;
     for (0..8) |row| {
         //try stdout.print("{d}, {d}: ", .{a, row});
         for (0..8) |col| {
@@ -22,11 +23,12 @@ pub fn print_board(a: u64) !i8 {
             } else {
                 try stdout.print("{s}", .{grey_bg});
             }
-            if (a << @intCast(8*row + col) == 1) {
+            if ((a >> @intCast(8*row + col))&n == n) {
                 try stdout.print(" {u} ", .{knight_b});
+                try stdout.print(" {u} ", .{knight_w});
             } else {
-                try stdout.print("   ", .{});
-            }
+                try stdout.print(" {d} ", .{8*row + col});
+            } 
         }
         try stdout.print("{s}\n", .{reset});
     }
