@@ -7,7 +7,7 @@ const std = @import("std");
 const lib = @import("cmd_chess_lib");
 
 pub fn main() !void {
-    const n:u64 = 0b1 << 63;
+    const n:u64 = 0b1 << 62;
     _ = try lib.print_board(n);
 }
 

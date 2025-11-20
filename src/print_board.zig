@@ -8,10 +8,10 @@ pub fn print_board(a: u64) !i8 {
 
     // const green = "\x1b[0;32m";
     // const black = "\x1b[0;30m";
-    // const white = "\x1b[0;37m";
+   // const white = "\x1b[0;37m";
     const reset = "\x1b[0m";
     const brown_bg = "\x1b[48;5;94m";
-    const grey_bg = "\x1b[48;5;250m";
+    const grey_bg = "\x1b[48;5;242m";
     const knight_w = '\u{2658}';
     const knight_b = '\u{265E}';
     const n:u64 = 0x01;
