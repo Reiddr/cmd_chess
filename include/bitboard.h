@@ -26,7 +26,7 @@ char bb_get_piece_char(BBPieceType pt){
 			return 	'Q';
 		case BB_T_KING:
 			return	'K';
-		case default:
+		default:
 			return	' ';
 	}
 }
