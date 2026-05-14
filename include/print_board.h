@@ -20,7 +20,7 @@ int bitboard_print(uint64_t bb){
 	int i;
 	for(i = 0; i<8; i++){
 		rank = bb >> (i*8);
-		byte_print(rank, '|', YELLOW);
+		byte_print(rank, '|', FG_YELLOW);
 	}
 }
 #endif /*PRINT_BOARD_H*/
