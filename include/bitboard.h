@@ -1,6 +1,8 @@
 #ifndef BITBOARD_H
 #define BITBOARD_H
 
+#include <stdint.h>
+
 typedef enum {
 	BB_T_PAWN,
 	BB_T_KNIGHT,
