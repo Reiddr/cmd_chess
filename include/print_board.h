@@ -13,6 +13,7 @@ int byte_print(uint8_t byte, char space, char* colour){
 		printf(" %u |", bit);
 	}
 	printf("\n" RESET);
+        return 0;
 }
 
 int bitboard_print(uint64_t bb){
@@ -22,5 +23,6 @@ int bitboard_print(uint64_t bb){
 		rank = bb >> (i*8);
 		byte_print(rank, '|', FG_YELLOW);
 	}
+        return 0;
 }
 #endif /*PRINT_BOARD_H*/
