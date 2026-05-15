@@ -4,6 +4,11 @@
 #include <ansi_codes.h>
 #include <bitboard.h>
 
+int print_char(char* c, char* fg, char* bg){
+        printf("%s%s%s%s", fg, bg, c, RESET); 
+        return 0;
+}
+
 int byte_print(uint8_t byte, char space, char* colour){
 	int i = 0;
 	printf("%s%c", colour, space);
