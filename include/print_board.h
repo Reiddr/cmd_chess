@@ -4,12 +4,33 @@
 #include <ansi_codes.h>
 #include <bitboard.h>
 
-int print_char(char* c, char* fg, char* bg){
+char* pb_get_piece_char(BBPieceType pt, int white)
+{
+	switch(pt) {
+		case BB_T_KING:
+			return	(white) ? "\u{2654}" : "\u{265A}" ;
+		case BB_T_QUEEN:
+			return	(white) ? "\u{2655}" : "\u{265B}" ;
+		case BB_T_ROOK:
+			return	(white) ? "\u{2656}" : "\u{265C}" ;
+		case BB_T_BISHOP:
+			return	(white) ? "\u{2657}" : "\u{265D}" ;
+		case BB_T_KNIGHT:
+			return	(white) ? "\u{2658}" : "\u{265E}" ;
+		case BB_T_PAWN:
+			return	(white) ? "\u{2659}" : "\u{265F}" ;
+		default:
+			return	"";
+	}
+}
+
+int pb_print_char(char* c, char* fg, char* bg)
+{
         printf("%s%s%s%s", fg, bg, c, RESET); 
         return 0;
 }
 
-int byte_print(uint8_t byte, char space, char* colour){
+int pb_print_byte(uint8_t byte, char space, char* colour){
 	int i = 0;
 	printf("%s%c", colour, space);
 	uint8_t bit;
@@ -21,12 +42,12 @@ int byte_print(uint8_t byte, char space, char* colour){
         return 0;
 }
 
-int bitboard_print(uint64_t bb){
+int pb_print_board(uint64_t bb){
 	uint8_t rank;
 	int i;
 	for(i = 0; i<8; i++){
 		rank = bb >> (i*8);
-		byte_print(rank, '|', FG_YELLOW);
+		pb_print_byte(rank, '|', FG_YELLOW);
 	}
         return 0;
 }

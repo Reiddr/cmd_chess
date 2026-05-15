@@ -6,31 +6,31 @@
 
 
 /* place the cursor at x,y  0,0 is top left*/
-int td_cursor(uint16 x, uint16 y){
+int td_cursor(uint16_t x, uint16_t y){
 	printf("\e[%u;%uH", x, y);
 	return 0;
 }
 
 /* move cursor UP n lines */
-int td_cursor_up(uint16 n){
+int td_cursor_up(uint16_t n){
 	printf("\e[%uA", n);
 	return 0;
 }
 
 /* move cursor DOWN n lines */
-int td_cursor_down(uint16 n){
+int td_cursor_down(uint16_t n){
 	printf("\e[%uB", n);
 	return 0;
 }
 
 /* move cursor LEFT n lines */
-int td_cursor_left(uint16 n){
+int td_cursor_left(uint16_t n){
 	printf("\e[%uD", n);
 	return 0;
 }
 
 /* move cursor RIGHT n lines */
-int td_cursor_right(uint16 n){
+int td_cursor_right(uint16_t n){
 	printf("\e[%uC", n);
 	return 0;
 }
@@ -59,7 +59,7 @@ int td_clear_line(void){
 	return 0;
 }
 
-int td_get_term_size(uint16* x, uint16* y){
+int td_get_term_size(uint16_t* x, uint16_t* y){
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     *x = w.ws_col;

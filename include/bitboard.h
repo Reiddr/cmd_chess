@@ -10,29 +10,14 @@ typedef enum {
 	BB_T_ROOK,
 	BB_T_QUEEN,
 	BB_T_KING,
-	BB_T_ALL,
 	BB_T_COUNT
 } BBPieceType;
 
-char* bb_get_piece_char(BBPieceType pt, int white)
-{
-	switch(pt) {
-		case BB_T_KING:
-			return	(white) ? "\u{2654}" : "\u{265A}" ;
-		case BB_T_QUEEN:
-			return	(white) ? "\u{2655}" : "\u{265B}" ;
-		case BB_T_ROOK:
-			return	(white) ? "\u{2656}" : "\u{265C}" ;
-		case BB_T_BISHOP:
-			return	(white) ? "\u{2657}" : "\u{265D}" ;
-		case BB_T_KNIGHT:
-			return	(white) ? "\u{2658}" : "\u{265E}" ;
-		case BB_T_PAWN:
-			return	(white) ? "\u{2659}" : "\u{265F}" ;
-		default:
-			return	"";
-	}
-}
+struct bb_board_state {
+        uint64_t white_pieces[BB_T_COUNT];
+        uint64_t black_pieces[BB_T_COUNT];
+        int turn_white;
+};
 
 void bb_init_player_pieces(uint64_t* pieces)
 {
@@ -44,17 +29,18 @@ void bb_init_player_pieces(uint64_t* pieces)
 	pieces[BB_T_KING] 	= 0x08; 	/*0b00010000*/
 };
 
-uint64_t _bb_rotate_piece(uint64_t bb)
+struct bb_board_state bb_init_board_state(void)
+{
+        struct bb_board_state bs;
+        bb_init_player_pieces(bs.white_pieces);
+        bb_init_player_pieces(bs.black_pieces);
+        bs.turn_white = 1;
+        return bs;
+}
+
+uint64_t bb_rotate(uint64_t bb)
 {
         return 0;
 }
-
-struct bb_board_state {
-        uint64_t white_pieces[BB_T_COUNT];
-        uint64_t black_pieces[BB_T_COUNT];
-        int turn_white;
-};
-
-
 
 #endif /*BITBOARD_H*/
