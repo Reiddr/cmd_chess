@@ -1,8 +1,9 @@
 #ifndef PRINT_BOARD_H
 #define PRINT_BOARD_H
 #include <stdio.h>
-#include <ansi_codes.h>
-#include <bitboard.h>
+#include "ansi_codes.h"
+#include "bitboard.h"
+#include "term_draw.h"
 
 char* pb_get_piece_char(BBPieceType pt, int white)
 {
@@ -24,12 +25,6 @@ char* pb_get_piece_char(BBPieceType pt, int white)
 	}
 }
 
-int pb_print_char(char* c, char* fg, char* bg)
-{
-        printf("%s%s%s%s", fg, bg, c, RESET); 
-        return 0;
-}
-
 int pb_print_byte(uint8_t byte, char space, char* colour){
 	int i = 0;
 	printf("%s%c", colour, space);
@@ -42,11 +37,15 @@ int pb_print_byte(uint8_t byte, char space, char* colour){
         return 0;
 }
 
-int pb_print_board(uint64_t bb){
+int pb_print_board(BBBoardState bs){
 	uint8_t rank;
 	int i;
-	for(i = 0; i<8; i++){
-		rank = bb >> (i*8);
+        char tmp_buff[2];
+	for(i = 7; i>-1; i--){
+                snprintf(
+                
+                td_puts(
+		rank = bs >> (i*8);
 		pb_print_byte(rank, '|', FG_YELLOW);
 	}
         return 0;

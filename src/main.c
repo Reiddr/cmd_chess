@@ -4,12 +4,11 @@
 #include <bitboard.h>
 
 int main(){
-	uint64_t white_pieces[BB_T_COUNT]; 
-	bb_populate_pieces(white_pieces);
-	uint8_t i;
+	struct BBBoardState bs = bb_init_board_state();
+	BBPieceType i;
 	for(i=BB_T_PAWN; i<BB_T_COUNT; i++){
-		printf("%c\n", bb_get_piece_char(i));
-		bitboard_print(white_pieces[i]); 
+		printf("%s\n", pb_get_piece_char(i, bs.turn_white));
+		pb_print_board(bs.white_pieces[i]); 
 	}
 
 	return 0;

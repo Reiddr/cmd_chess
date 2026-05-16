@@ -1,7 +1,6 @@
 #ifndef TERM_DRAW_H
 #define TERM_DRAW_H
 
-#include <ansi_codes.h>
 #include <stdint.h>
 
 int td_puts(char* s, char* fg, char* bg);

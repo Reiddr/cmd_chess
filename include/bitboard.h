@@ -13,7 +13,7 @@ typedef enum {
 	BB_T_COUNT
 } BBPieceType;
 
-struct bb_board_state {
+struct BBBoardState {
         uint64_t white_pieces[BB_T_COUNT];
         uint64_t black_pieces[BB_T_COUNT];
         int turn_white;
@@ -29,9 +29,9 @@ void bb_init_player_pieces(uint64_t* pieces)
 	pieces[BB_T_KING] 	= 0x08; 	/*0b00010000*/
 };
 
-struct bb_board_state bb_init_board_state(void)
+struct BBBoardState bb_init_board_state(void)
 {
-        struct bb_board_state bs;
+        struct BBBoardState bs;
         bb_init_player_pieces(bs.white_pieces);
         bb_init_player_pieces(bs.black_pieces);
         bs.turn_white = 1;
