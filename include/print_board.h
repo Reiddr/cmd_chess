@@ -37,16 +37,21 @@ int pb_print_byte(uint8_t byte, char space, char* colour){
         return 0;
 }
 
-int pb_print_board(BBBoardState bs){
-	uint8_t rank;
-	int i;
-        char tmp_buff[2];
-	for(i = 7; i>-1; i--){
-                snprintf(
+int pb_print_board(struct BBBoardState bs){
+        size_t len_tmp_buff = 2;
+        char tmp_buff[len_tmp_buff];
+        int i;
+	for(i = 7; i > -1; i--){
+                //format and print the rank number
+                snprintf(tmp_buff, len_tmp_buff, "%i", i+1);
+                td_puts(tmp_buff, FG_WHITE, BG_BLACK);
                 
-                td_puts(
-		rank = bs >> (i*8);
-		pb_print_byte(rank, '|', FG_YELLOW);
+                int j;
+                for(j = 0; j < 8; j++){
+                         
+                }
+		// rank = bs >> (i*8);
+		// pb_print_byte(rank, '|', FG_YELLOW);
 	}
         return 0;
 }
