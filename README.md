@@ -8,31 +8,34 @@ To build run:
 - `cmake --build build`
 
 ### TODO
-- split term_draw into its own library with an installable CMakeLists
 
-- add all the basic bitboard functions: flip, rotate, ect
+- Add a FEN notation conversion from the boardstate struct to make printing easier
 
-- add a header for the piece moves
+- Split term_draw into its own library with an installable CMakeLists
 
-- shift the header code into source files
+- Add all the basic bitboard functions: flip, rotate, ect
 
-- create functions for printing a single bitboard with pieces
+- Add a header for the piece moves
 
-- add a simple gameplay loop
+- Shift the header code into source files
+
+- Create functions for printing a single bitboard with pieces
+
+- Add a simple gameplay loop
     - ask for a move
     - move the piece from/to the corresponding square
 
-- create a bitboard piece header and source for checking moves
+- Create a bitboard piece header and source for checking moves
 
-- write in game logic to restrict moves
+- Write in game logic to restrict moves
 
-- update the gameplay loop to allow a full game to be played between two humans
+- Update the gameplay loop to allow a full game to be played between two humans
 
-- start making a chess engine to evaluate positions 
+- Start making a chess engine to evaluate positions 
 
-- allow play against a computer
+- Allow play against a computer
 
-- split the game into a server/client architecture over tcp
+- Split the game into a server/client architecture over tcp
     - this way a central server can run the evaluation and have multiple games going at once
     - allow clients to create games, then query games and make moves, all the chess logic can be implemented by the server
 
