@@ -25,8 +25,8 @@
 #define BG_WHITE 	"\e[47m"
 #define BG_DEFAULT 	"\e[49m"
 
-#define BG_GRAY 	"\e[48;5;244m"
-#define BG_BROWN	"\e[48;5;94m"
+#define BG_CREAM 	"\e[48;5;230m"
+#define BG_BROWN	"\e[48;5;95m"
 #define FG_OFFWHITE	"\e[38;5;253m"
 #define FG_OFFBLACK	"\e[38;5;234m"
 
