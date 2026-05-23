@@ -76,8 +76,35 @@ int pb_get_board_str(struct BBBoardState bs, char* s, int len_s){
         return 1;
 }
 
-
 void pb_print_board(struct BBBoardState bs)
+{
+        int len_board_str = 65;
+        char board_str[len_board_str];
+        pb_get_board_str(bs, board_str, len_board_str);
+        td_reset_colour();
+
+        size_t len_tmp_buff = 20;
+        char tmp_buff[len_tmp_buff];
+        int i, j;
+	for(i = 0; i < 8; i++){
+                //format and print the rank number
+                snprintf(tmp_buff, len_tmp_buff, "%i  ", 8-i);
+                td_puts(tmp_buff, FG_WHITE, BG_BLACK);
+                for(j = 0; j < 8; j++){
+                        char c = board_str[i * 8 + j];
+                        if (c == ' '){
+                                c = '.';
+                        }
+                        snprintf(tmp_buff, len_tmp_buff, "%c ", c);
+                        td_puts(tmp_buff, FG_WHITE, BG_BLACK);
+                }
+                putchar('\n');
+	}
+        td_puts( "\n   A B C D E F G H\n", FG_WHITE, BG_BLACK);
+        td_reset_colour();
+}
+
+void pb_print_board_fancy(struct BBBoardState bs)
 {
         size_t len_tmp_buff = 20;
         char tmp_buff[len_tmp_buff];
