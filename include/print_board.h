@@ -1,29 +1,81 @@
 #ifndef PRINT_BOARD_H
 #define PRINT_BOARD_H
 #include <stdio.h>
+#include <assert.h>
 #include "ansi_codes.h"
 #include "bitboard.h"
 #include "term_draw.h"
 
-char* pb_get_piece_char(BBPieceType pt, int white)
+char pb_get_piece_char(BBPieceType pt, int white)
 {
 	switch(pt) {
 		case BB_T_KING:
-			return	(white) ? "\u{2654} " : "\u{265A} " ;
+			return	(white) ? 'K' : 'k' ;
 		case BB_T_QUEEN:
-			return	(white) ? "\u{2655} " : "\u{265B} " ;
+			return	(white) ? 'Q' : 'q' ;
 		case BB_T_ROOK:
-			return	(white) ? "\u{2656} " : "\u{265C} " ;
+			return	(white) ? 'R' : 'r' ;
 		case BB_T_BISHOP:
-			return	(white) ? "\u{2657} " : "\u{265D} " ;
+			return	(white) ? 'B' : 'b' ;
 		case BB_T_KNIGHT:
-			return	(white) ? "\u{2658} " : "\u{265E} " ;
+			return	(white) ? 'N' : 'n' ;
 		case BB_T_PAWN:
-			return	(white) ? "\u{2659} " : "\u{265F} " ;
+			return	(white) ? 'P' : 'p' ;
+		default:
+			return	' ';
+	}
+}
+
+char* pb_get_piece_char_unicode(BBPieceType pt, int white)
+{
+	switch(pt) {
+		case BB_T_KING:
+			return	(white) ? "\u{2654}" : "\u{265A}" ;
+		case BB_T_QUEEN:
+			return	(white) ? "\u{2655}" : "\u{265B}" ;
+		case BB_T_ROOK:
+			return	(white) ? "\u{2656}" : "\u{265C}" ;
+		case BB_T_BISHOP:
+			return	(white) ? "\u{2657}" : "\u{265D}" ;
+		case BB_T_KNIGHT:
+			return	(white) ? "\u{2658}" : "\u{265E}" ;
+		case BB_T_PAWN:
+			return	(white) ? "\u{2659}" : "\u{265F}" ;
 		default:
 			return	"";
 	}
 }
+
+// will get the basic str representation for easy printing
+// eg rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR
+// input char* must be at least len 65
+// does not check validity of boardstate, if multiple pieces are on the same square only the final one will be shown
+int pb_get_board_str(struct BBBoardState bs, char* s, int len_s){
+        assert(len_s >= 65);
+        //intialise the whole str to " "
+        int i;
+        for (i = 0; i < 64; i++){
+                s[i] = ' ';
+        }
+        s[64] = '\0';
+
+        //loop through all the white and black pieces and set their piece chars in the board string
+        int len_indices = 64;
+        int indices[len_indices];
+	BBPieceType t;
+	for(t = BB_T_PAWN; t < BB_T_COUNT; t++){
+                int num_indices = bb_get_piece_indices(bs.white_pieces[t], indices, len_indices);
+                for (i = 0; i < num_indices; i++){
+                        s[indices[i]] = pb_get_piece_char(t, 1);
+                }
+                num_indices = bb_get_piece_indices(bs.black_pieces[t], indices, len_indices);
+                for (i = 0; i < num_indices; i++){
+                        s[indices[i]] = pb_get_piece_char(t, 0);
+                }
+	}
+        return 1;
+}
+
 
 void pb_print_board(struct BBBoardState bs)
 {
@@ -46,7 +98,7 @@ void pb_print_board(struct BBBoardState bs)
                         char *fg = FG_BLACK;
                         char *bg = ((i + j) % 2) ? BG_BROWN : BG_CREAM;
                         uint64_t mask = 1ULL << (i * 8 + j);
-                        char *p = (bb & mask) ? pb_get_piece_char(pt, turn_white) : "  ";
+                        char *p = (bb & mask) ? pb_get_piece_char_unicode(pt, turn_white) : "  ";
                         td_puts(p, fg, bg);
                 }
                 td_reset_colour();

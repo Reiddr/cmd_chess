@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <assert.h>
 
 typedef enum {
 	BB_T_PAWN,
@@ -21,22 +22,25 @@ struct BBBoardState {
         int turn_white;
 };
 
-void bb_init_player_pieces(uint64_t* pieces)
-{
-	pieces[BB_T_PAWN] 	= 0x000000000000FF00; 	/*0b1111111100000000*/
-	pieces[BB_T_KNIGHT] 	= 0x0000000000000042; 	/*0b01000010*/
-	pieces[BB_T_BISHOP] 	= 0x0000000000000024; 	/*0b00100100*/
-	pieces[BB_T_ROOK] 	= 0x0000000000000081; 	/*0b10000001*/
-	pieces[BB_T_QUEEN] 	= 0x0000000000000010; 	/*0b00010000*/
-	pieces[BB_T_KING] 	= 0x0000000000000008; 	/*0b00001000*/
-};
-
 struct BBBoardState bb_init_board_state(void)
 {
         struct BBBoardState bs;
-        bb_init_player_pieces(bs.white_pieces);
-        bb_init_player_pieces(bs.black_pieces);
         bs.turn_white = 1;
+
+	bs.white_pieces[BB_T_PAWN] 	= 0x000000000000FF00; 	/*0b1111111100000000*/
+	bs.white_pieces[BB_T_KNIGHT] 	= 0x0000000000000042; 	/*0b01000010*/
+	bs.white_pieces[BB_T_BISHOP] 	= 0x0000000000000024; 	/*0b00100100*/
+	bs.white_pieces[BB_T_ROOK] 	= 0x0000000000000081; 	/*0b10000001*/
+	bs.white_pieces[BB_T_QUEEN] 	= 0x0000000000000010; 	/*0b00010000*/
+	bs.white_pieces[BB_T_KING] 	= 0x0000000000000008; 	/*0b00001000*/
+
+	bs.black_pieces[BB_T_PAWN] 	= 0x00FF000000000000;	
+	bs.black_pieces[BB_T_KNIGHT] 	= 0x4200000000000000;
+	bs.black_pieces[BB_T_BISHOP] 	= 0x2400000000000000;
+	bs.black_pieces[BB_T_ROOK] 	= 0x8100000000000000;
+	bs.black_pieces[BB_T_QUEEN] 	= 0x0800000000000000;
+	bs.black_pieces[BB_T_KING] 	= 0x1000000000000000;
+
         return bs;
 }
 
@@ -50,6 +54,22 @@ void bb_print_binary(const uint64_t bb){
                 }
                 putchar('\n');
         }
+}
+
+// get a list of indices where the bitboard is true
+// obviously we can have max 1 everywhere so output len must be at least 64
+// returns the number of positive indices
+int bb_get_piece_indices(uint64_t bb, int* indices, int len_indices){
+        assert(len_indices >= 64);
+        int index = 0;
+        int i;
+        for (i = 0; i < 64; i++){
+                uint64_t mask = 1ULL << i;
+                if (bb & mask) {
+                        indices[index++] = 63 - i; //flip the index, as I want it to be from left to right as you look at a uint64_t
+                }
+        }
+        return index;
 }
 
 uint64_t bb_rotate(uint64_t bb)
