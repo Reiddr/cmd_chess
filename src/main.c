@@ -15,6 +15,7 @@ int main(){
         int win = 0;
         while (!win){
                 pb_print_board(bs);
+                pb_print_board_fancy(bs);
                 printf("Enter move: ");
                 scanf("%49s", input);
                 /* check valid input */
