@@ -7,7 +7,12 @@ set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 add_compile_options(-Wall -Wextra -Werror)
+
 include_directories(include)
 
 add_library(termdraw STATIC
