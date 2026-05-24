@@ -50,10 +50,11 @@ char* pb_get_piece_char_unicode(BBPieceType pt, int white)
 eg rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR
 input char* must be at least len 65
 does not check validity of boardstate, if multiple pieces are on the same square only the final one will be shown */
-int pb_get_board_str(struct BBBoardState bs, char* s, size_t len_s){
+int pb_get_board_str(struct BBBoardState bs, char* s, size_t len_s)
+{
         assert(len_s >= 65);
         /* intialise the whole str to " " */
-        int i, j;
+        int i;
         for (i = 0; i < 64; i++){
                 s[i] = ' ';
         }
@@ -73,18 +74,77 @@ int pb_get_board_str(struct BBBoardState bs, char* s, size_t len_s){
                         s[indices[i]] = pb_get_piece_char(t, 0);
                 }
 	}
+        return 0;
+}
 
-        /* compress the str into a proper FEN str */
-        char c;
-        int count;
-        for (i = 0; i < 8; i++){
-                count = 0;
-                for (j = 0; j < 8; j++){
-                        c = s[i * 8 + j];
+/* will convert the board state to a FEN string
+eg rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+input char* must be at least len 9 * 8 + 17 = 89
+does not check validity of boardstate, if multiple pieces are on the same square only the final one will be shown */
+int pb_get_fen(struct BBBoardState bs, char* s, size_t len_s)
+{
+        assert(len_s >= 89);
+        size_t len_tmp = 65;
+        char tmp[len_tmp];
+        pb_get_board_str(bs, tmp, len_tmp); /* should probably check error here */
+
+        int count = 0;
+        int index = 0;
+        int i;
+        for (i = 0; i < 64; i++){
+                if (i % 8 == 0)
+                        s[index++] = '/';
+                if (tmp[i] == ' ') {
+                        count++;
+                } else {
+                        if (count > 0) {
+                                s[index++] = '0' + count; /* convert int to ascii char, '0' is decimal 48, count should never be over 8 */
+                                count = 0;
+                        }
+                        s[index++] = tmp[i];
                 }
         }
-                        
-        return 0;
+
+        s[index++] = ' ';
+        s[index++] = bs.turn_white ? 'w' : 'b';
+        s[index++] = ' ';
+
+        count = index;
+        if (bs.castling_white_king_side)
+                s[index++] = 'K';
+        if (bs.castling_white_queen_side)
+                s[index++] = 'Q';
+        if (bs.castling_black_king_side)
+                s[index++] = 'k';
+        if (bs.castling_black_queen_side)
+                s[index++] = 'q';
+        if (count == index)
+                s[index++] = '-';
+        s[index++] = ' ';
+
+        if (bs.en_passant_square[0] == '-') {
+                s[index++] = '-';
+        } else {
+                s[index++] = bs.en_passant_square[0];
+                s[index++] = bs.en_passant_square[1];
+        }
+        s[index++] = ' ';
+
+        assert (bs.halfmove_clock < 51); /* if we've hit 51 the game should be over */         
+        assert (bs.fullmove_clock < 1000); /* limit to 3 digits, theoretically we can go longer, but the longest recorded match is 269 */
+        sprintf(tmp, "%d", bs.halfmove_clock);
+        i = 0;
+        while (tmp[i]) 
+                s[index++] = tmp[i];
+        s[index++] = ' ';
+
+        sprintf(tmp, "%d", bs.fullmove_clock);
+        i = 0;
+        while (tmp[i]) 
+                s[index++] = tmp[i];
+
+        s[index++] = '\0';
+        return index;
 }
 
 void pb_print_board(struct BBBoardState bs)
@@ -103,7 +163,7 @@ void pb_print_board(struct BBBoardState bs)
                 td_puts(tmp_buff, FG_WHITE, BG_BLACK);
                 for(j = 0; j < 8; j++){
                         char c = board_str[i * 8 + j];
-                        if (c == ' '){
+                        if (c == ' ') {
                                 c = '.';
                         }
                         sprintf(tmp_buff, "%c ", c);
@@ -129,7 +189,7 @@ void pb_print_board_fancy(struct BBBoardState bs)
                 sprintf(tmp_buff, "%i  ", i+1);
                 td_puts(tmp_buff, FG_WHITE, BG_BLACK);
                 for(j = 7; j > -1; j--){
-                        if(j >= 3){
+                        if(j >= 3) {
                                 turn_white = 0;
                         } else {
                                 turn_white = 1;

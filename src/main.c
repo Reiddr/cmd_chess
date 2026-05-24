@@ -5,6 +5,12 @@
 
 int main(){
 	struct BBBoardState bs = bb_init_board_state();
+
+        size_t len_buff = 89;
+        char buff[len_buff];
+        pb_get_fen(bs, buff, len_buff);
+        printf("FEN str: %s\n", buff);
+
         char input[50];
         int win = 0;
         while (!win){

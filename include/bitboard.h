@@ -20,12 +20,27 @@ struct BBBoardState {
         uint64_t white_pieces[BB_T_COUNT];
         uint64_t black_pieces[BB_T_COUNT];
         int turn_white;
+        int castling_white_king_side;
+        int castling_white_queen_side;
+        int castling_black_king_side;
+        int castling_black_queen_side;
+        char en_passant_square[3]; /* target square, example pawn moves e2e4, target square is e3 */
+        int halfmove_clock; /* halfmoves since the last pawn move or piece capture (for 50 move rule) */
+        int fullmove_clock; /* number of moves, increments on black's turn */
 };
 
 struct BBBoardState bb_init_board_state(void)
 {
         struct BBBoardState bs;
         bs.turn_white = 1;
+        bs.castling_white_king_side = 1;
+        bs.castling_white_queen_side = 1;
+        bs.castling_black_king_side = 1;
+        bs.castling_black_queen_side = 1;
+        bs.en_passant_square[0] = '-';
+        bs.en_passant_square[1] = '\0';
+        bs.halfmove_clock = 0;
+        bs.fullmove_clock = 0;
 
 	bs.white_pieces[BB_T_PAWN] 	= 0x000000000000FF00; 	/*0b1111111100000000*/
 	bs.white_pieces[BB_T_KNIGHT] 	= 0x0000000000000042; 	/*0b01000010*/
