@@ -40,7 +40,7 @@ char* pb_get_piece_unicode(BBPieceType pt, int white)
         case BB_T_KNIGHT:
                 return	(white) ? "\xE2\x99\x98" : "\xE2\x99\x9E" ;
         case BB_T_PAWN:
-                return	(white) ? "\xE2\x99\x99" : "\xE2\x99\x9F" ;
+                return	(white) ? "\xE2\x99\x99" : "\xE2\x99\x9F\xEF\xB8\x8E" ; /* black pawn is longer because it must be forced to render as non emoji version */
         default:
                 return	"";
 	}
@@ -72,7 +72,7 @@ char* pb_get_piece_unicode_from_ascii(char c)
         case 'n':
                 return "\xE2\x99\x9E";
         case 'p':
-                return "\xE2\x99\x9F";
+                return "\xE2\x99\x9F\xEF\xB8\x8E"; /* black pawn is longer because it must be forced to render as non emoji version */
         default:
                 return	"";
 	}
