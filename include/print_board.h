@@ -92,8 +92,13 @@ int pb_get_fen(struct BBBoardState bs, char* s, size_t len_s)
         int index = 0;
         int i;
         for (i = 0; i < 64; i++){
-                if (i % 8 == 0)
+                if (i % 8 == 0) {
+                        if (count > 0) {
+                                s[index++] = '0' + count; /* convert int to ascii char, '0' is decimal 48, count should never be over 8 */
+                                count = 0;
+                        }
                         s[index++] = '/';
+                }
                 if (tmp[i] == ' ') {
                         count++;
                 } else {
@@ -131,19 +136,21 @@ int pb_get_fen(struct BBBoardState bs, char* s, size_t len_s)
         s[index++] = ' ';
 
         assert (bs.halfmove_clock < 51); /* if we've hit 51 the game should be over */         
-        assert (bs.fullmove_clock < 1000); /* limit to 3 digits, theoretically we can go longer, but the longest recorded match is 269 */
         sprintf(tmp, "%d", bs.halfmove_clock);
         i = 0;
         while (tmp[i]) 
-                s[index++] = tmp[i];
+                s[index++] = tmp[i++];
         s[index++] = ' ';
 
+        assert (bs.fullmove_clock < 1000); /* limit to 3 digits, theoretically we can go longer, but the longest recorded match is 269 */
         sprintf(tmp, "%d", bs.fullmove_clock);
         i = 0;
         while (tmp[i]) 
-                s[index++] = tmp[i];
+                s[index++] = tmp[i++];
 
         s[index++] = '\0';
+
+        assert((size_t)index <= len_s);
         return index;
 }
 
