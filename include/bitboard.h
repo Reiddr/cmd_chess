@@ -56,25 +56,20 @@ void bb_print_binary(const uint64_t bb){
         }
 }
 
-// get a list of indices where the bitboard is true
-// obviously we can have max 1 everywhere so output len must be at least 64
-// returns the number of positive indices
-int bb_get_piece_indices(uint64_t bb, int* indices, int len_indices){
+/* get a list of indices where the bitboard is true
+obviously we can have max 1 everywhere so output len must be at least 64
+returns the number of positive indices */
+int bb_get_piece_indices(uint64_t bb, int* indices, size_t len_indices){
         assert(len_indices >= 64);
         int index = 0;
         int i;
         for (i = 0; i < 64; i++){
                 uint64_t mask = 1ULL << i;
                 if (bb & mask) {
-                        indices[index++] = 63 - i; //flip the index, as I want it to be from left to right as you look at a uint64_t
+                        indices[index++] = 63 - i; /* flip the index, as I want it to be from left to right as you look at a uint64_t */
                 }
         }
         return index;
-}
-
-uint64_t bb_rotate(uint64_t bb)
-{
-        return 0;
 }
 
 #endif /*BITBOARD_H*/

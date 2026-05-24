@@ -5,16 +5,17 @@
 
 int main(){
 	struct BBBoardState bs = bb_init_board_state();
-	// BBPieceType i;
-	// for(i=BB_T_PAWN; i<BB_T_COUNT; i++){
-	// 	printf("%s\n", pb_get_piece_char(i, bs.turn_white));
-	// 	// pb_print_board(bs); 
-	//                bb_print_binary(bs.white_pieces[i]);
-	// }
-        char s[65];
-        pb_get_board_str(bs, s, 65);
-        printf("Board string: '%s'\n", s);
-        pb_print_board(bs);
+        char input[50];
+        int win = 0;
+        while (!win){
+                pb_print_board(bs);
+                printf("Enter move: ");
+                scanf("%49s", input);
+                /* check valid input */
+                /* check valid move */
+                /* play move */
+                /* check for win */
+        }
 
 	return 0;
 }
