@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "print_board.h"
 #include "bitboard.h"
+#include "player_moves.h"
 
 int main(){
 	struct BBBoardState bs = bb_init_board_state();
@@ -9,16 +10,28 @@ int main(){
         size_t len_buff = 89;
         char buff[len_buff];
         pb_get_fen(bs, buff, len_buff);
-        printf("FEN str: %s\n", buff);
+        printf("FEN str: %s\n\n", buff);
+
+        pb_print_board(bs);
+        printf("\n");
+        pb_print_board_fancy(bs);
 
         char input[50];
         int win = 0;
         while (!win){
-                pb_print_board(bs);
-                pb_print_board_fancy(bs);
                 printf("Enter move: ");
                 scanf("%49s", input);
                 /* check valid input */
+                int valid = pm_check_move_str(input);
+                if (valid != 0) {
+                        printf("Error: check move returned: %i\n", valid);
+                        printf("You didn't enter a move on the board. Your move: %s\n", input);
+                        printf("Moves must be of the form [start_file][start_rank][end_file][end_rank]\n");
+                        printf("Example: 'e2e4'\n");
+                        continue;
+                }
+                printf("starting square: \n");
+                bb_print_binary(pm_get_start_square(input));
                 /* check valid move */
                 /* play move */
                 /* check for win */
