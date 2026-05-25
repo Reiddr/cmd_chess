@@ -6,6 +6,12 @@
 #include <inttypes.h>
 #include <assert.h>
 
+/* A bitboard will be a uint64_t where each bit is a square on the chessboard
+ * The bits will read left to right top to bottom, as if reading the squares out
+ * The MSB will be A8, the LSB will be H1
+ */
+
+
 typedef enum {
 	BB_T_PAWN,
 	BB_T_KNIGHT,
