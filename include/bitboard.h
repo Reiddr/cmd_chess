@@ -67,10 +67,10 @@ struct BBBoardState bb_init_board_state(void)
 
 void bb_print_binary(const uint64_t bb){
         printf("Bitboard hex: %016" PRIX64 "\n", bb);
-        int i, j;
-        for(i = 7; i > -1; i--){
-                for(j = 7; j > -1; j--){
-                        uint64_t mask = 1ULL << (i * 8 + j);
+        int rank, file;
+        for(rank = 7; rank > -1; rank--){
+                for(file = 7; file > -1; file--){
+                        uint64_t mask = 1ULL << (rank * 8 + file);
                         putchar((bb & mask) ? '1' : '0');
                 }
                 putchar('\n');

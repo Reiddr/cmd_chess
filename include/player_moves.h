@@ -33,7 +33,7 @@ int pm_check_move_str(const char* s)
 uint64_t pm_get_start_square(const char* s){
         int file = s[0] - 'a';
         int rank = s[1] - '1';
-        uint64_t r = 1ULL << (rank * 8 + (8 - file)); /* 8 - file because we're shifting starting from the right */
+        uint64_t r = 1ULL << (rank * 8 + (7 - file)); /* 8 - file because we're shifting starting from the right */
         return r;
 }
 
