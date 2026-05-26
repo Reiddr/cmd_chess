@@ -3,6 +3,7 @@
 #include "print_board.h"
 #include "bitboard.h"
 #include "player_moves.h"
+#include "piece_moves.h"
 
 int main(){
 	struct BBBoardState bs = bb_init_board_state();
@@ -44,6 +45,14 @@ int main(){
                 printf("Piece is white: %d\n", white);
                 printf("Starting square: \n");
                 bb_print_binary(start_square);
+
+                /* get all moves the piece can make */
+                uint64_t captures;
+                uint64_t pawn_moves = pm_get_pawn_moves(start_square, 0, &captures);
+                printf("Pawn moves: \n");
+                bb_print_binary(pawn_moves);
+                printf("Capture moves: \n");
+                bb_print_binary(captures);
                 /* check valid move */
                 /* play move */
                 /* check for win */
