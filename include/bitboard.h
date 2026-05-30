@@ -22,6 +22,9 @@ typedef enum {
 	BB_T_COUNT
 } BBPieceType;
 
+const uint64_t BB_0 = 0x0000000000000000;
+const uint64_t BB_1 = 0x0000000000000001;
+
 struct BBBoardState {
         uint64_t white_pieces[BB_T_COUNT];
         uint64_t black_pieces[BB_T_COUNT];
@@ -30,7 +33,7 @@ struct BBBoardState {
         int castling_white_queen_side;
         int castling_black_king_side;
         int castling_black_queen_side;
-        char en_passant_square[3]; /* target square, example pawn moves e2e4, target square is e3 */
+        uint64_t en_passant_square; /* target square, example pawn moves e2e4, target square is e3 */
         int halfmove_clock; /* halfmoves since the last pawn move or piece capture (for 50 move rule) */
         int fullmove_clock; /* number of moves, increments on black's turn */
 };
@@ -43,8 +46,7 @@ struct BBBoardState bb_init_board_state(void)
         bs.castling_white_queen_side = 1;
         bs.castling_black_king_side = 1;
         bs.castling_black_queen_side = 1;
-        bs.en_passant_square[0] = '-';
-        bs.en_passant_square[1] = '\0';
+        bs.en_passant_square = 0ULL;
         bs.halfmove_clock = 0;
         bs.fullmove_clock = 0;
 
@@ -70,7 +72,7 @@ void bb_print_binary(const uint64_t bb){
         int rank, file;
         for(rank = 7; rank > -1; rank--){
                 for(file = 7; file > -1; file--){
-                        uint64_t mask = 1ULL << (rank * 8 + file);
+                        uint64_t mask = BB_1 << (rank * 8 + file);
                         putchar((bb & mask) ? '1' : '0');
                 }
                 putchar('\n');
@@ -85,7 +87,7 @@ int bb_get_piece_indices(uint64_t bb, int* indices, size_t len_indices){
         int index = 0;
         int i;
         for (i = 0; i < 64; i++){
-                uint64_t mask = 1ULL << i;
+                uint64_t mask = BB_1 << i;
                 if (bb & mask) {
                         indices[index++] = 63 - i; /* flip the index, as I want it to be from left to right as you look at a uint64_t */
                 }
