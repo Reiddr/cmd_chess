@@ -46,6 +46,12 @@ int main(){
                 printf("Starting square: \n");
                 bb_print_binary(start_square);
 
+                int indices[64];
+                bb_get_piece_indices(start_square, indices, 64);
+                char start_square_english[5];
+                bb_get_sqaure_chars(indices[0], start_square_english, 5);
+                printf("Starting square index was: %d\nStarting square as string is: %s\n", indices[0], start_square_english);
+
                 /* get all moves the piece can make */
                 uint64_t captures;
                 uint64_t pawn_moves = pm_get_pawn_moves(start_square, 0, &captures);

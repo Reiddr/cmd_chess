@@ -46,7 +46,7 @@ struct BBBoardState bb_init_board_state(void)
         bs.castling_white_queen_side = 1;
         bs.castling_black_king_side = 1;
         bs.castling_black_queen_side = 1;
-        bs.en_passant_square = 0ULL;
+        bs.en_passant_square = BB_0;
         bs.halfmove_clock = 0;
         bs.fullmove_clock = 0;
 
@@ -67,7 +67,8 @@ struct BBBoardState bb_init_board_state(void)
         return bs;
 }
 
-void bb_print_binary(const uint64_t bb){
+void bb_print_binary(const uint64_t bb)
+{
         printf("Bitboard hex: %016" PRIX64 "\n", bb);
         int rank, file;
         for(rank = 7; rank > -1; rank--){
@@ -82,7 +83,8 @@ void bb_print_binary(const uint64_t bb){
 /* get a list of indices where the bitboard is true
 obviously we can have max 1 everywhere so output len must be at least 64
 returns the number of positive indices */
-int bb_get_piece_indices(uint64_t bb, int* indices, size_t len_indices){
+int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indices)
+{
         assert(len_indices >= 64);
         int index = 0;
         int i;
@@ -95,4 +97,21 @@ int bb_get_piece_indices(uint64_t bb, int* indices, size_t len_indices){
         return index;
 }
 
+/* Given an index that is within the range [0 64) 
+ * add its square as a human readable string to the buffer
+ * eg index 0 -> "a8", index 60 -> "e1"
+ * length of the buffer must be at least 3
+ * returns the number of chars used (including terminating null)
+ */
+int bb_get_sqaure_chars(const int i, char* s, const size_t len_s)
+{
+        assert(len_s > 2);
+        int rank = 7 - i / 8;
+        int file = i % 8;
+        s[0] = file + 'a';
+        s[1] = rank + '1';
+        s[2] = '\0';
+        return 3;
+
+}
 #endif /*BITBOARD_H*/

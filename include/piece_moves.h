@@ -13,7 +13,8 @@
  * and move 2 spaces if they are on the second or eighth rank for white or black respectively
  * as pawns are special the captures are returned in a separate bitboard
  */
-uint64_t pm_get_pawn_moves(const uint64_t bb, const int white, uint64_t* captures) {
+uint64_t pm_get_pawn_moves(const uint64_t bb, const int white, uint64_t* captures)
+{
         uint64_t rank_mask = 0xFF00ULL;  
         if (!white)
                 rank_mask = rank_mask << (5 * 8);
