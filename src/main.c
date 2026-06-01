@@ -13,6 +13,9 @@ int main(){
         pb_get_fen(bs, buff, len_buff);
         printf("FEN str: %s\n\n", buff);
 
+        int num_pawns = bb_get_num_pieces(bs.white_pieces[BB_T_PAWN]);
+        printf("Number of white pawns: %d", num_pawns);
+
         pb_print_board(bs);
         printf("\n");
         pb_print_board_fancy(bs);
@@ -46,15 +49,13 @@ int main(){
                 printf("Starting square: \n");
                 bb_print_binary(start_square);
 
-                int indices[64];
-                bb_get_piece_indices(start_square, indices, 64);
                 char start_square_english[5];
-                bb_get_sqaure_chars(indices[0], start_square_english, 5);
-                printf("Starting square index was: %d\nStarting square as string is: %s\n", indices[0], start_square_english);
+                bb_get_square_str(start_square, start_square_english, 5);
+                printf("Starting square as string is: %s\n", start_square_english);
 
                 /* get all moves the piece can make */
                 uint64_t captures;
-                uint64_t pawn_moves = pm_get_pawn_moves(start_square, 0, &captures);
+                uint64_t pawn_moves = pm_get_pawn_moves(start_square, white, &captures);
                 printf("Pawn moves: \n");
                 bb_print_binary(pawn_moves);
                 printf("Capture moves: \n");

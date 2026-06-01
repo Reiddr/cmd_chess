@@ -67,6 +67,9 @@ struct BBBoardState bb_init_board_state(void)
         return bs;
 }
 
+/* Prints a bitboard, 
+ * will first print the hex then print the bb in a 8x8 grid
+ */
 void bb_print_binary(const uint64_t bb)
 {
         printf("Bitboard hex: %016" PRIX64 "\n", bb);
@@ -80,7 +83,7 @@ void bb_print_binary(const uint64_t bb)
         }
 }
 
-/* get a list of indices where the bitboard is true
+/* Get a list of indices where the bitboard is true
 obviously we can have max 1 everywhere so output len must be at least 64
 returns the number of positive indices */
 int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indices)
@@ -103,9 +106,10 @@ int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indic
  * length of the buffer must be at least 3
  * returns the number of chars used (including terminating null)
  */
-int bb_get_sqaure_chars(const int i, char* s, const size_t len_s)
+int bb_get_square_str_from_index(const int i, char* s, const size_t len_s)
 {
         assert(len_s > 2);
+        assert((i > -1) && (i < 64));
         int rank = 7 - i / 8;
         int file = i % 8;
         s[0] = file + 'a';
@@ -114,4 +118,31 @@ int bb_get_sqaure_chars(const int i, char* s, const size_t len_s)
         return 3;
 
 }
+
+/* Given a bitboard return the square string of the first piece on it
+*/
+int bb_get_square_str(const uint64_t bb, char* s, const size_t len_s)
+{
+        int indices[64];
+        int num_indices = bb_get_piece_indices(bb, indices, 64);
+        if (num_indices < 1)
+                return num_indices;
+        return bb_get_square_str_from_index(indices[0], s, len_s);
+
+}
+
+/* Given a bitboard count the number of pieces on it
+ */
+int bb_get_num_pieces(uint64_t bb)
+{
+        int count = 0;
+        int i;
+        for (i = 0; i < 64; i++) { 
+                if (bb & BB_1)
+                        count++;
+                bb = bb >> 1;
+        }
+        return count;
+}
+
 #endif /*BITBOARD_H*/

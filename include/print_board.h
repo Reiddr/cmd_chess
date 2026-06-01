@@ -159,11 +159,14 @@ int pb_get_fen(struct BBBoardState bs, char* s, size_t len_s)
                 s[index++] = '-';
         s[index++] = ' ';
 
-        if (bs.en_passant_square[0] == '-') {
+        if (bs.en_passant_square == BB_0) {
                 s[index++] = '-';
         } else {
-                s[index++] = bs.en_passant_square[0];
-                s[index++] = bs.en_passant_square[1];
+                char square_str[3];
+                int valid = bb_get_square_str(bs.en_passant_square, square_str, 3);
+                assert(valid > 0);
+                s[index++] = square_str[0];
+                s[index++] = square_str[1];
         }
         s[index++] = ' ';
 
