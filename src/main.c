@@ -54,12 +54,9 @@ int main(){
                 printf("Starting square as string is: %s\n", start_square_english);
 
                 /* get all moves the piece can make */
-                uint64_t captures;
-                uint64_t pawn_moves = pm_get_pawn_moves(start_square, white, &captures);
-                printf("Pawn moves: \n");
-                bb_print_binary(pawn_moves);
-                printf("Capture moves: \n");
-                bb_print_binary(captures);
+                uint64_t knight_moves = pm_get_knight_moves(start_square);
+                printf("Knight moves: \n");
+                bb_print_binary(knight_moves);
                 /* check valid move */
                 /* play move */
                 /* check for win */

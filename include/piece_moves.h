@@ -2,6 +2,7 @@
 #define PIECE_MOVES_H 
 
 #include <stdint.h>
+#include "bitboard.h"
 
 /* The following functions will get the possible moves of the pieces
  * as if they are the only one on the board
@@ -15,6 +16,8 @@
  */
 uint64_t pm_get_pawn_moves(const uint64_t bb, const int white, uint64_t* captures)
 {
+        assert(bb_get_num_pieces(bb) == 1);
+
         uint64_t rank_mask = 0xFF00ULL;  
         if (!white)
                 rank_mask = rank_mask << (5 * 8);
@@ -34,6 +37,37 @@ uint64_t pm_get_pawn_moves(const uint64_t bb, const int white, uint64_t* capture
         if (rank_mask & bb) 
                 moves = moves | ((white) ? moves << 8 : moves >> 8);
 
+        return moves;
+}
+
+/* Knights moves in an L, 2 files, 1 rank, or vice versa
+ */
+uint64_t pm_get_knight_moves(const uint64_t bb) 
+{
+        int indices[64];
+        int num_indices = bb_get_piece_indices(bb, indices, 64);
+        assert(num_indices == 1);
+        int rank, file;
+        bb_get_rank_file_from_index(indices[0], &rank, &file);
+
+        /* go around knight moves clockwise starting in top left */
+        uint64_t moves = 0ULL;
+        if (rank < 6 && file > 0)
+                moves += bb << 17;
+        if (rank < 6 && file < 7)
+                moves += bb << 15;
+        if (rank < 7 && file < 6)
+                moves += bb << 6;
+        if (rank > 0 && file < 6)
+                moves += bb >> 10;
+        if (rank > 1 && file < 7)
+                moves += bb >> 17;
+        if (rank > 1 && file > 0)
+                moves += bb >> 15;
+        if (rank > 0 && file > 1)
+                moves += bb >> 6;
+        if (rank < 7 && file > 1)
+                moves += bb << 10;
         return moves;
 }
 

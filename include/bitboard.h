@@ -102,6 +102,8 @@ int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indic
 
 /* Given an index in the range [0 64)
  * get its rank and file
+ * these are indices in the range [0 7]
+ * where (0, 0) is bottom left of the board
  */
 void bb_get_rank_file_from_index(const int i, int* rank, int* file)
 {
