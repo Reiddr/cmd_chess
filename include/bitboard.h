@@ -100,6 +100,16 @@ int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indic
         return index;
 }
 
+/* Given an index in the range [0 64)
+ * get its rank and file
+ */
+void bb_get_rank_file_from_index(const int i, int* rank, int* file)
+{
+        assert((i > -1) && (i < 64));
+        *rank = 7 - i / 8;
+        *file = i % 8;
+}
+
 /* Given an index that is within the range [0 64) 
  * add its square as a human readable string to the buffer
  * eg index 0 -> "a8", index 60 -> "e1"
@@ -109,14 +119,12 @@ int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indic
 int bb_get_square_str_from_index(const int i, char* s, const size_t len_s)
 {
         assert(len_s > 2);
-        assert((i > -1) && (i < 64));
-        int rank = 7 - i / 8;
-        int file = i % 8;
+        int rank, file;
+        bb_get_rank_file_from_index(i, &rank, &file);
         s[0] = file + 'a';
         s[1] = rank + '1';
         s[2] = '\0';
         return 3;
-
 }
 
 /* Given a bitboard return the square string of the first piece on it
@@ -128,7 +136,6 @@ int bb_get_square_str(const uint64_t bb, char* s, const size_t len_s)
         if (num_indices < 1)
                 return num_indices;
         return bb_get_square_str_from_index(indices[0], s, len_s);
-
 }
 
 /* Given a bitboard count the number of pieces on it
