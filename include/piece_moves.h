@@ -86,8 +86,40 @@ uint64_t pm_get_rook_moves(const uint64_t bb)
 
         uint64_t moves = BB_0;
         moves |= left_mask >> file;
-        moves |= bottom_mask << (rank * 8);
+        moves ^= bottom_mask << (rank * 8); /* xor to remove starting square */
         return moves;
 }
 
+/* Bishop moves, all along the intersecting diagonals
+ */
+uint64_t pm_get_bishop_moves(const uint64_t bb) 
+{
+        int indices[64];
+        int num_indices = bb_get_piece_indices(bb, indices, 64);
+        assert(num_indices == 1);
+        int rank, file;
+        bb_get_rank_file_from_index(indices[0], &rank, &file);
+
+        printf("Rank: %d, File: %d\n", rank, file);
+        /* go through the quadrants clockwise starting top left */
+        uint64_t moves = BB_0;
+        int squares_to_move, i;
+        squares_to_move = (7 - rank > file) ? file : 7 - rank;
+        printf("Squares top left: %d\n", squares_to_move);
+        for (i = 1; i <= squares_to_move; i++)
+                        moves |= bb << 9 * i;
+        squares_to_move = (rank > file) ? 7 - rank : 7 - file;
+        printf("Squares top right: %d\n", squares_to_move);
+        for (i = 1; i <= squares_to_move; i++)
+                        moves |= bb << 7 * i;
+        squares_to_move = (rank > 7 - file) ? 7 - file : rank;
+        printf("Squares bottom right: %d\n", squares_to_move);
+        for (i = 1; i <= squares_to_move; i++)
+                        moves |= bb >> 9 * i;
+        squares_to_move = (7 - rank > 7 - file) ? rank : file;
+        printf("Squares bottom left: %d\n", squares_to_move);
+        for (i = 1; i <= squares_to_move; i++)
+                        moves |= bb >> 7 * i;
+        return moves;
+}
 #endif /*PIECE_MOVES_H*/
