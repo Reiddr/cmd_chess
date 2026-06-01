@@ -122,4 +122,14 @@ uint64_t pm_get_bishop_moves(const uint64_t bb)
                         moves |= bb >> 7 * i;
         return moves;
 }
+
+/* Queen moves, combination of bishop and rook
+ */
+uint64_t pm_get_queen_moves(const uint64_t bb)
+{
+        uint64_t moves = pm_get_rook_moves(bb);
+        moves |= pm_get_bishop_moves(bb);
+        return moves;
+}
+
 #endif /*PIECE_MOVES_H*/
