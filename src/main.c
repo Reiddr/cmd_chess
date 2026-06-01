@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "print_board.h"
 #include "bitboard.h"
-#include "player_moves.h"
+#include "player_input.h"
 #include "piece_moves.h"
 
 int main(){
@@ -14,7 +14,7 @@ int main(){
         printf("FEN str: %s\n\n", buff);
 
         int num_pawns = bb_get_num_pieces(bs.white_pieces[BB_T_PAWN]);
-        printf("Number of white pawns: %d", num_pawns);
+        printf("Number of white pawns: %d\n", num_pawns);
 
         pb_print_board(bs);
         printf("\n");
@@ -27,7 +27,7 @@ int main(){
                 scanf("%49s", input);
 
                 /* check valid input */
-                int valid = pm_check_move_str(input);
+                int valid = pi_check_move_str(input);
                 if (valid != 0) {
                         printf("Error: check move returned: %i\n", valid);
                         printf("You didn't enter a move on the board. Your move: %s\n", input);
@@ -40,7 +40,7 @@ int main(){
                 BBPieceType type;
                 int white;
                 uint64_t start_square;
-                valid = pm_find_piece(bs, input, &start_square, &type, &white);
+                valid = pi_find_piece(bs, input, &start_square, &type, &white);
                 if (valid !=0) {
                         printf("Did not find a piece on starting square. Your move %s\n", input);
                 }

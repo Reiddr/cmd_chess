@@ -1,5 +1,5 @@
-#ifndef PLAYER_MOVES_H
-#define PLAYER_MOVES_H
+#ifndef PLAYER_INPUT_H
+#define PLAYER_INPUT_H
 
 #include <stdint.h>
 #include "bitboard.h"
@@ -7,7 +7,7 @@
 /* moves can be of the form a1b2 [start_square][end_square]
  * this function will check that both are actually on the board
  */
-int pm_check_move_str(const char* s)
+int pi_check_move_str(const char* s)
 {
         int i = 0;
         while (s[i++]) {
@@ -31,7 +31,7 @@ int pm_check_move_str(const char* s)
  * eg "a1" or "e5"
  * return a bitboard with the square set to 1
  */
-uint64_t pm_get_square(const char* s)
+uint64_t pi_get_square(const char* s)
 {
         int file = s[0] - 'a';
         int rank = s[1] - '1';
@@ -45,9 +45,9 @@ uint64_t pm_get_square(const char* s)
  * returns 0 if allgood
  * positive if no piece is found
  */
-int pm_find_piece(const struct BBBoardState bs, const char* s, uint64_t* start_square, BBPieceType* type, int* white)
+int pi_find_piece(const struct BBBoardState bs, const char* s, uint64_t* start_square, BBPieceType* type, int* white)
 {
-        *start_square = pm_get_square(s);
+        *start_square = pi_get_square(s);
         for (*type = BB_T_PAWN; *type < BB_T_COUNT; (*type)++) {
                 if (bs.white_pieces[*type] & *start_square) {
                         *white = 1;
@@ -62,4 +62,4 @@ int pm_find_piece(const struct BBBoardState bs, const char* s, uint64_t* start_s
 }
 
 
-#endif /*PLAYER_MOVES_H*/
+#endif /*PLAYER_INPUT*/
