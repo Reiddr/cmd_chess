@@ -6,7 +6,7 @@
 #include "bitboard.h"
 #include "term_draw.h"
 
-char pb_get_piece_char(BBPieceType pt, int white)
+char pb_get_piece_char(const BBPieceType pt, const int white)
 {
 	switch(pt) {
         case BB_T_KING:
@@ -26,7 +26,7 @@ char pb_get_piece_char(BBPieceType pt, int white)
 	}
 }
 
-char* pb_get_piece_unicode(BBPieceType pt, int white)
+char* pb_get_piece_unicode(const BBPieceType pt, const int white)
 {
 	switch(pt) {
         case BB_T_KING:
@@ -46,7 +46,7 @@ char* pb_get_piece_unicode(BBPieceType pt, int white)
 	}
 }
 
-char* pb_get_piece_unicode_from_ascii(char c)
+char* pb_get_piece_unicode_from_ascii(const char c)
 {
 	switch(c) {
         case 'K':
@@ -82,7 +82,7 @@ char* pb_get_piece_unicode_from_ascii(char c)
 eg rnbqkbnr/pppppppp/        /        /        /        /PPPPPPPP/RNBQKBNR
 input char* must be at least len 65
 does not check validity of boardstate, if multiple pieces are on the same square only the final one will be shown */
-int pb_get_board_str(struct BBBoardState bs, char* s, size_t len_s)
+int pb_get_board_str(const struct BBBoardState bs, char* s, const size_t len_s)
 {
         assert(len_s >= 65);
         /* intialise the whole str to " " */
@@ -113,7 +113,7 @@ int pb_get_board_str(struct BBBoardState bs, char* s, size_t len_s)
 eg rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 input char* must be at least len 9 * 8 + 17 = 89
 does not check validity of boardstate, if multiple pieces are on the same square only the final one will be shown */
-int pb_get_fen(struct BBBoardState bs, char* s, size_t len_s)
+int pb_get_fen(const struct BBBoardState bs, char* s, const size_t len_s)
 {
         assert(len_s >= 89);
         size_t len_tmp = 65;
@@ -189,7 +189,7 @@ int pb_get_fen(struct BBBoardState bs, char* s, size_t len_s)
         return index;
 }
 
-void pb_print_board(struct BBBoardState bs)
+void pb_print_board(const struct BBBoardState bs)
 {
         size_t len_board_str = 65;
         char board_str[len_board_str];
@@ -218,7 +218,7 @@ void pb_print_board(struct BBBoardState bs)
 }
 
 /* this doesn't actually print the whole fancy board yet */
-void pb_print_board_fancy(struct BBBoardState bs)
+void pb_print_board_fancy(const struct BBBoardState bs)
 {
         size_t len_board_str = 65;
         char board_str[len_board_str];
