@@ -4,6 +4,43 @@
 #include <stdint.h>
 #include "bitboard.h"
 
+typedef enum {
+        PM_DIR_NW,
+        PM_DIR_N,
+        PM_DIR_NE,
+        PM_DIR_E,
+        PM_DIR_SE,
+        PM_DIR_S,
+        PM_DIR_SW,
+        PM_DIR_W,
+        PM_DIR_COUNT,
+} PMDirection;
+
+/* function to slide a piece a single move in a direction defined by PMDirection */
+uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d)
+{
+        switch (d) {
+        case PM_DIR_NW:
+                return bb << 9;
+        case PM_DIR_N:
+                return bb << 8;
+        case PM_DIR_NE:
+                return bb << 7;
+        case PM_DIR_E:
+                return bb >> 1;
+        case PM_DIR_SE:
+                return bb >> 9;
+        case PM_DIR_S:
+                return bb >> 8;
+        case PM_DIR_SW:
+                return bb >> 7;
+        case PM_DIR_W:
+                return bb << 1;
+        default:
+                return BB_0;
+        }
+}
+
 /* The following functions will get the possible moves of the pieces
  * as if they are the only one on the board
  * ie, these functions will not take into account board state
@@ -129,6 +166,29 @@ uint64_t pm_get_queen_moves(const uint64_t bb)
 {
         uint64_t moves = pm_get_rook_moves(bb);
         moves |= pm_get_bishop_moves(bb);
+        return moves;
+}
+
+/* King moves, all directions a single square 
+ */
+uint64_t pm_get_king_moves(const uint64_t bb)
+{
+        const uint64_t left_mask  = 0x8080808080808080;
+        const uint64_t right_mask = 0x0101010101010101;
+        uint64_t moves = BB_0;
+        /* both N and S slides will bit shift off the board but the E and W slides will wrap */
+        moves |= pm_slide_piece(bb, PM_DIR_N);
+        moves |= pm_slide_piece(bb, PM_DIR_S);
+        if (!(bb & right_mask)) {
+                moves |= pm_slide_piece(bb, PM_DIR_NE);
+                moves |= pm_slide_piece(bb, PM_DIR_E);
+                moves |= pm_slide_piece(bb, PM_DIR_SE);
+        }
+        if (!(bb & left_mask)) {
+                moves |= pm_slide_piece(bb, PM_DIR_NW);
+                moves |= pm_slide_piece(bb, PM_DIR_W);
+                moves |= pm_slide_piece(bb, PM_DIR_SW);
+        }
         return moves;
 }
 

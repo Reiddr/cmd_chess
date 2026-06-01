@@ -54,8 +54,8 @@ int main(){
                 printf("Starting square as string is: %s\n", start_square_english);
 
                 /* get all moves the piece can make */
-                uint64_t moves = pm_get_queen_moves(start_square);
-                printf("Queen moves: \n");
+                uint64_t moves = pm_get_king_moves(start_square);
+                printf("King moves: \n");
                 bb_print_binary(moves);
                 /* check valid move */
                 /* play move */
