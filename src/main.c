@@ -54,9 +54,9 @@ int main(){
                 printf("Starting square as string is: %s\n", start_square_english);
 
                 /* get all moves the piece can make */
-                uint64_t knight_moves = pm_get_knight_moves(start_square);
-                printf("Knight moves: \n");
-                bb_print_binary(knight_moves);
+                uint64_t rook_moves = pm_get_rook_moves(start_square);
+                printf("Rook moves: \n");
+                bb_print_binary(rook_moves);
                 /* check valid move */
                 /* play move */
                 /* check for win */

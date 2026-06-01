@@ -51,23 +51,42 @@ uint64_t pm_get_knight_moves(const uint64_t bb)
         bb_get_rank_file_from_index(indices[0], &rank, &file);
 
         /* go around knight moves clockwise starting in top left */
-        uint64_t moves = 0ULL;
+        uint64_t moves = BB_0;
         if (rank < 6 && file > 0)
-                moves += bb << 17;
+                moves |= bb << 17;
         if (rank < 6 && file < 7)
-                moves += bb << 15;
+                moves |= bb << 15;
         if (rank < 7 && file < 6)
-                moves += bb << 6;
+                moves |= bb << 6;
         if (rank > 0 && file < 6)
-                moves += bb >> 10;
+                moves |= bb >> 10;
         if (rank > 1 && file < 7)
-                moves += bb >> 17;
+                moves |= bb >> 17;
         if (rank > 1 && file > 0)
-                moves += bb >> 15;
+                moves |= bb >> 15;
         if (rank > 0 && file > 1)
-                moves += bb >> 6;
+                moves |= bb >> 6;
         if (rank < 7 && file > 1)
-                moves += bb << 10;
+                moves |= bb << 10;
+        return moves;
+}
+
+/* Rook moves, all along a rank or file
+ */
+uint64_t pm_get_rook_moves(const uint64_t bb) 
+{
+        int indices[64];
+        int num_indices = bb_get_piece_indices(bb, indices, 64);
+        assert(num_indices == 1);
+        int rank, file;
+        bb_get_rank_file_from_index(indices[0], &rank, &file);
+
+        uint64_t left_mask  = 0x8080808080808080;
+        uint64_t bottom_mask  = 0x00000000000000FF;
+
+        uint64_t moves = BB_0;
+        moves |= left_mask >> file;
+        moves |= bottom_mask << (rank * 8);
         return moves;
 }
 
