@@ -1,4 +1,5 @@
 #include <asm-generic/ioctls.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -8,31 +9,31 @@
 
 /* place the cursor at x,y  0,0 is top left*/
 int td_cursor(uint16_t x, uint16_t y){
-	printf("\e[%u;%uH", x, y);
+	printf("\033[%u;%uH", x, y);
 	return 0;
 }
 
 /* move cursor UP n lines */
 int td_cursor_up(uint16_t n){
-	printf("\e[%uA", n);
+	printf("\033[%uA", n);
 	return 0;
 }
 
 /* move cursor DOWN n lines */
 int td_cursor_down(uint16_t n){
-	printf("\e[%uB", n);
+	printf("\033[%uB", n);
 	return 0;
 }
 
 /* move cursor LEFT n lines */
 int td_cursor_left(uint16_t n){
-	printf("\e[%uD", n);
+	printf("\033[%uD", n);
 	return 0;
 }
 
 /* move cursor RIGHT n lines */
 int td_cursor_right(uint16_t n){
-	printf("\e[%uC", n);
+	printf("\033[%uC", n);
 	return 0;
 }
 
