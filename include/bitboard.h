@@ -54,6 +54,7 @@ int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indic
  * get its rank and file
  * these are indices in the range [0 7]
  * where (0, 0) is bottom left of the board
+ * returns 0 on pass and 1 on fail if index is out of bounds
  */
 int bb_get_rank_file_from_index(const int i, int* rank, int* file);
 
@@ -66,10 +67,13 @@ int bb_get_rank_file_from_index(const int i, int* rank, int* file);
 int bb_get_square_str_from_index(const int i, char* s, const size_t len_s);
 
 /* Given a bitboard return the square string of the first piece on it
+ * returns a negative number on fail
+ * returns the number of characters used in the buffer (usually 3)
 */
 int bb_get_square_str(const uint64_t bb, char* s, const size_t len_s);
 
 /* Given a bitboard count the number of pieces on it
+ * returns the count of pieces, guaranteed to be between 0 and 64 inclusive
  */
 int bb_get_num_pieces(uint64_t bb);
 

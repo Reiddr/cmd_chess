@@ -1,7 +1,6 @@
 #include "piece_moves.h"
 #include "bitboard.h"
 #include <stdint.h>
-#include <stdio.h>
 
 uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d)
 {
@@ -65,7 +64,7 @@ int pm_get_knight_moves(const uint64_t bb, uint64_t *moves)
 
         valid = bb_get_rank_file_from_index(indices[0], &rank, &file);
         if (valid == 1)
-                return -1;
+                return 2;
 
         /* go around knight moves clockwise starting in top left */
         *moves = BB_0;
@@ -120,23 +119,18 @@ int pm_get_bishop_moves(const uint64_t bb, uint64_t *moves)
         if (valid != 1)
                 return 2;
 
-        printf("Rank: %d, File: %d\n", rank, file);
         /* go through the quadrants clockwise starting top left */
         *moves = BB_0;
         squares_to_move = (7 - rank > file) ? file : 7 - rank;
-        printf("Squares top left: %d\n", squares_to_move);
         for (i = 1; i <= squares_to_move; i++)
                         *moves |= bb << 9 * i;
         squares_to_move = (rank > file) ? 7 - rank : 7 - file;
-        printf("Squares top right: %d\n", squares_to_move);
         for (i = 1; i <= squares_to_move; i++)
                         *moves |= bb << 7 * i;
         squares_to_move = (rank > 7 - file) ? 7 - file : rank;
-        printf("Squares bottom right: %d\n", squares_to_move);
         for (i = 1; i <= squares_to_move; i++)
                         *moves |= bb >> 9 * i;
         squares_to_move = (7 - rank > 7 - file) ? rank : file;
-        printf("Squares bottom left: %d\n", squares_to_move);
         for (i = 1; i <= squares_to_move; i++)
                         *moves |= bb >> 7 * i;
         return 0;
