@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <inttypes.h>
-#include <assert.h>
 
 struct BBBoardState bb_init_board_state(void)
 {
@@ -50,7 +49,8 @@ int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indic
 {
         int index = 0;
         int i;
-        assert(len_indices >= 64);
+        if (len_indices < 64)
+                return -1;
         for (i = 0; i < 64; i++){
                 uint64_t mask = BB_1 << i;
                 if (bb & mask) {
@@ -60,18 +60,23 @@ int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indic
         return index;
 }
 
-void bb_get_rank_file_from_index(const int i, int* rank, int* file)
+int bb_get_rank_file_from_index(const int i, int* rank, int* file)
 {
-        assert((i > -1) && (i < 64));
+        if ((i < 0) || (i > 63))
+                return 1;
         *rank = 7 - i / 8;
         *file = i % 8;
+        return 0;
 }
 
 int bb_get_square_str_from_index(const int i, char* s, const size_t len_s)
 {
-        int rank, file;
-        assert(len_s > 2);
-        bb_get_rank_file_from_index(i, &rank, &file);
+        int rank, file, valid;
+        if (len_s < 3)
+                return -1;
+        valid = bb_get_rank_file_from_index(i, &rank, &file);
+        if (valid == 1)
+                return -1;
         s[0] = file + 'a';
         s[1] = rank + '1';
         s[2] = '\0';

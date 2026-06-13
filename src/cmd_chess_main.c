@@ -58,7 +58,7 @@ int main(void){
                 printf("Starting square as string is: %s\n", start_square_english);
 
                 /* get all moves the piece can make */
-                moves = pm_get_king_moves(start_square);
+                valid = pm_get_king_moves(start_square, &moves);
                 printf("King moves: \n");
                 bb_print_binary(moves);
                 /* check valid move */

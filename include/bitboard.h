@@ -20,8 +20,8 @@ typedef enum {
 	BB_T_COUNT
 } BBPieceType;
 
-const uint64_t BB_0 = 0x0000000000000000;
-const uint64_t BB_1 = 0x0000000000000001;
+static const uint64_t BB_0 = 0x0000000000000000;
+static const uint64_t BB_1 = 0x0000000000000001;
 
 struct BBBoardState {
         uint64_t white_pieces[BB_T_COUNT];
@@ -55,7 +55,7 @@ int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indic
  * these are indices in the range [0 7]
  * where (0, 0) is bottom left of the board
  */
-void bb_get_rank_file_from_index(const int i, int* rank, int* file);
+int bb_get_rank_file_from_index(const int i, int* rank, int* file);
 
 /* Given an index that is within the range [0 64) 
  * add its square as a human readable string to the buffer

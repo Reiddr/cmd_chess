@@ -3,7 +3,6 @@
 #include "bitboard.h"
 #include "term_draw.h"
 #include <stdio.h>
-#include <assert.h>
 
 char pb_get_piece_char(const BBPieceType pt, const int white)
 {
@@ -79,24 +78,26 @@ char* pb_get_piece_unicode_from_ascii(const char c)
 
 int pb_get_board_str(const struct BBBoardState bs, char* s, const size_t len_s)
 {
-        assert(len_s >= 65);
-        /* intialise the whole str to " " */
         int i;
+        enum {LEN_INDICES = 89};
+        int indices[LEN_INDICES];
+        BBPieceType t;
+
+        if (len_s < 65)
+                return 1;
+        /* intialise the whole str to " " */
         for (i = 0; i < 64; i++){
                 s[i] = ' ';
         }
         s[64] = '\0';
 
         /* loop through all the white and black pieces and set their piece chars in the board string */
-        size_t len_indices = 64;
-        int indices[len_indices];
-	BBPieceType t;
 	for(t = BB_T_PAWN; t < BB_T_COUNT; t++){
-                int num_indices = bb_get_piece_indices(bs.white_pieces[t], indices, len_indices);
+                int num_indices = bb_get_piece_indices(bs.white_pieces[t], indices, LEN_INDICES);
                 for (i = 0; i < num_indices; i++){
                         s[indices[i]] = pb_get_piece_char(t, 1);
                 }
-                num_indices = bb_get_piece_indices(bs.black_pieces[t], indices, len_indices);
+                num_indices = bb_get_piece_indices(bs.black_pieces[t], indices, LEN_INDICES);
                 for (i = 0; i < num_indices; i++){
                         s[indices[i]] = pb_get_piece_char(t, 0);
                 }
@@ -106,14 +107,16 @@ int pb_get_board_str(const struct BBBoardState bs, char* s, const size_t len_s)
 
 int pb_get_fen(const struct BBBoardState bs, char* s, const size_t len_s)
 {
-        assert(len_s >= 89);
-        size_t len_tmp = 65;
-        char tmp[len_tmp];
-        pb_get_board_str(bs, tmp, len_tmp); /* should probably check error here */
-
+        enum {LEN_BUFF = 65};
+        char tmp[LEN_BUFF];
         int count = 0;
         int index = 0;
         int i;
+
+        if (len_s < 89)
+                return -1;
+        pb_get_board_str(bs, tmp, LEN_BUFF); /* should probably check error here */
+
         for (i = 0; i < 64; i++){
                 if ((i > 0) && (i % 8 == 0)) {
                         if (count > 0) {
@@ -154,21 +157,27 @@ int pb_get_fen(const struct BBBoardState bs, char* s, const size_t len_s)
                 s[index++] = '-';
         } else {
                 char square_str[3];
-                int valid = bb_get_square_str(bs.en_passant_square, square_str, 3);
-                assert(valid > 0);
+                int valid;
+                valid = bb_get_square_str(bs.en_passant_square, square_str, 3);
+                if (valid < 0)
+                        return -1;
                 s[index++] = square_str[0];
                 s[index++] = square_str[1];
         }
         s[index++] = ' ';
 
-        assert (bs.halfmove_clock < 51); /* if we've hit 51 the game should be over */         
+        if (bs.halfmove_clock > 50)
+                return -1;
+
         sprintf(tmp, "%d", bs.halfmove_clock);
         i = 0;
         while (tmp[i]) 
                 s[index++] = tmp[i++];
         s[index++] = ' ';
 
-        assert (bs.fullmove_clock < 1000); /* limit to 3 digits, theoretically we can go longer, but the longest recorded match is 269 */
+        if (bs.halfmove_clock > 1000)
+                return -1;
+
         sprintf(tmp, "%d", bs.fullmove_clock);
         i = 0;
         while (tmp[i]) 
@@ -176,20 +185,23 @@ int pb_get_fen(const struct BBBoardState bs, char* s, const size_t len_s)
 
         s[index++] = '\0';
 
-        assert((size_t)index <= len_s);
+        if ((size_t)index > len_s)
+                return -1;
+
         return index;
 }
 
 void pb_print_board(const struct BBBoardState bs)
 {
-        size_t len_board_str = 65;
-        char board_str[len_board_str];
-        pb_get_board_str(bs, board_str, len_board_str);
+        enum {LEN_BOARD_STR = 65};
+        enum {LEN_BUFF = 20};
+        char board_str[LEN_BOARD_STR];
+        char tmp_buff[LEN_BUFF];
+        int i, j;
+
+        pb_get_board_str(bs, board_str, LEN_BOARD_STR);
         td_reset_colour();
 
-        size_t len_tmp_buff = 20;
-        char tmp_buff[len_tmp_buff];
-        int i, j;
 	for(i = 0; i < 8; i++){
                 /* format and print the rank number */
                 sprintf(tmp_buff, "%i  ", 8-i);
@@ -210,14 +222,15 @@ void pb_print_board(const struct BBBoardState bs)
 
 void pb_print_board_fancy(const struct BBBoardState bs)
 {
-        size_t len_board_str = 65;
-        char board_str[len_board_str];
-        pb_get_board_str(bs, board_str, len_board_str);
+        enum {LEN_BOARD_STR = 65};
+        enum {LEN_BUFF = 20};
+        char board_str[LEN_BOARD_STR];
+        char tmp_buff[LEN_BUFF];
+        int i, j;
+
+        pb_get_board_str(bs, board_str, LEN_BOARD_STR);
         td_reset_colour();
 
-        size_t len_tmp_buff = 20;
-        char tmp_buff[len_tmp_buff];
-        int i, j;
 	for(i = 0; i < 8; i++){
                 /* format and print the rank number */ 
                 sprintf(tmp_buff, "%i  ", 8-i);
