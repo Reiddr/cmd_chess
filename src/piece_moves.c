@@ -4,22 +4,50 @@
 
 uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d)
 {
+        uint64_t west_mask  = 0x8080808080808080;
+        uint64_t east_mask  = 0x0101010101010101;
+        uint64_t north_mask = 0xFF00000000000000;
+        uint64_t south_mask = 0x00000000000000FF;
         switch (d) {
         case PM_DIR_NW:
+                if (bb & north_mask)
+                        return BB_0;
+                if (bb & west_mask)
+                        return BB_0;
                 return bb << 9;
         case PM_DIR_N:
+                if (bb & north_mask)
+                        return BB_0;
                 return bb << 8;
         case PM_DIR_NE:
+                if (bb & north_mask)
+                        return BB_0;
+                if (bb & east_mask)
+                        return BB_0;
                 return bb << 7;
         case PM_DIR_E:
+                if (bb & east_mask)
+                        return BB_0;
                 return bb >> 1;
         case PM_DIR_SE:
+                if (bb & south_mask)
+                        return BB_0;
+                if (bb & east_mask)
+                        return BB_0;
                 return bb >> 9;
         case PM_DIR_S:
+                if (bb & south_mask)
+                        return BB_0;
                 return bb >> 8;
         case PM_DIR_SW:
+                if (bb & south_mask)
+                        return BB_0;
+                if (bb & west_mask)
+                        return BB_0;
                 return bb >> 7;
         case PM_DIR_W:
+                if (bb & west_mask)
+                        return BB_0;
                 return bb << 1;
         default:
                 return BB_0;
