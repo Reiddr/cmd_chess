@@ -21,6 +21,14 @@ To build run:
 
 - Create functions for printing a single bitboard with pieces
 
+- Use Makefile instead of CMakeLists for building
+
+- Add a simple test framework as the project grows
+
+- Enable lsp integration with bear and clang
+
+- set up clang format command in Makefile with formatting rules following the linux kernel
+
 - Add a simple gameplay loop
     - ask for a move
     - move the piece from/to the corresponding square
