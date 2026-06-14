@@ -103,3 +103,34 @@ int bb_get_num_pieces(uint64_t bb)
         }
         return count;
 }
+
+uint64_t bb_get_mask(const uint64_t *bb, const size_t len_bb)
+{
+        size_t i;
+        uint64_t bb_out = BB_0;
+
+        if (len_bb == 0)
+                return bb_out;
+        else
+                bb_out = *bb;
+
+        for (i = 1; i < len_bb; i++)
+                bb_out |= bb[i];
+
+        return bb_out;
+}
+
+int bb_find_piece(const struct BBBoardState bs, const uint64_t start_square, BBPieceType* type, int* white)
+{
+        for (*type = BB_T_PAWN; *type < BB_T_COUNT; (*type)++) {
+                if (bs.white_pieces[*type] & start_square) {
+                        *white = 1;
+                        return 0;
+                }
+                if (bs.black_pieces[*type] & start_square) {
+                        *white = 0;
+                        return 0;
+                }
+        }
+        return 1;
+}

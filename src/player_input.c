@@ -33,15 +33,5 @@ uint64_t pi_get_square(const char* s)
 int pi_find_piece(const struct BBBoardState bs, const char* s, uint64_t* start_square, BBPieceType* type, int* white)
 {
         *start_square = pi_get_square(s);
-        for (*type = BB_T_PAWN; *type < BB_T_COUNT; (*type)++) {
-                if (bs.white_pieces[*type] & *start_square) {
-                        *white = 1;
-                        return 0;
-                }
-                if (bs.black_pieces[*type] & *start_square) {
-                        *white = 0;
-                        return 0;
-                }
-        }
-        return 1;
+        return bb_find_piece(bs, *start_square, type, white);
 }

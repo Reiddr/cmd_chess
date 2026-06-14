@@ -77,4 +77,15 @@ int bb_get_square_str(const uint64_t bb, char* s, const size_t len_s);
  */
 int bb_get_num_pieces(uint64_t bb);
 
+/* A function to get a mask of all the pieces in a bitboard array
+ */
+uint64_t bb_get_mask(const uint64_t *bb, const size_t len_bb);
+
+/* A function to take in the board state and a square return piece type and colour
+ * will use the first result found, ie will not check the board state validity
+ * returns 0 if allgood
+ * positive if no piece is found
+ */
+int bb_find_piece(const struct BBBoardState bs, const uint64_t start_square, BBPieceType* type, int* white);
+
 #endif /*BITBOARD_H*/
