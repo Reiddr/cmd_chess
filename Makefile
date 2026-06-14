@@ -2,6 +2,7 @@
 SRCDIR   := src
 INCDIR   := include
 BUILDDIR := build
+TESTDIR  := tests
 
 CC      := gcc
 AR      := ar
@@ -11,6 +12,7 @@ CPPFLAGS := -I$(INCDIR)
 CFLAGS   := -std=c90 -Wall -Wextra -Werror -Wpedantic -Wshadow 
 LDFLAGS  :=
 LDLIBS   := -lm
+TFLAGS    = $(CFLAGS) -I$(TESTDIR) -g -O0
 
 # Debug / Release toggle:  make BUILD=debug  or  make BUILD=release (default)
 BUILD ?= release
@@ -29,7 +31,11 @@ DEPFLAGS = -MMD -MP
 
 # --- Sources shared by ALL executables ----------------------------------------
 SHARED_SRCS := \
-    $(SRCDIR)/term_draw.c
+    $(SRCDIR)/term_draw.c \
+    $(SRCDIR)/bitboard.c \
+    $(SRCDIR)/piece_moves.c \
+    $(SRCDIR)/player_input.c \
+    $(SRCDIR)/print_board.c
 
 # --- Per-executable sources (include their own main + any private sources) -----
 SERVER_SRCS := \
@@ -39,11 +45,10 @@ CLIENT_SRCS := \
     $(SRCDIR)/cmd_chess_client_main.c
 
 TOOL_SRCS := \
-    $(SRCDIR)/cmd_chess_main.c \
-    $(SRCDIR)/bitboard.c \
-    $(SRCDIR)/piece_moves.c \
-    $(SRCDIR)/player_input.c \
-    $(SRCDIR)/print_board.c
+    $(SRCDIR)/cmd_chess_main.c 
+
+# --- Test sources --------------------------------------------------------------
+TEST_SRCS := $(wildcard $(TESTDIR)/*.c)
 
 # Derive object and dependency file lists from source lists
 #
@@ -60,11 +65,14 @@ ALL_OBJS := $(sort $(SHARED_OBJS) $(SERVER_OBJS) $(CLIENT_OBJS) $(TOOL_OBJS))
 DEPS     := $(ALL_OBJS:.o=.d)
 
 # Executable names — override with  make BINDIR=/usr/local/bin  if desired
-BINDIR := $(BUILDDIR)/bin
+BINDIR  := $(BUILDDIR)/bin
+TBINDIR := $(BUILDDIR)/tests
 
 SERVER := $(BINDIR)/cmd_chess_server
 CLIENT := $(BINDIR)/cmd_chess_client
 TOOL   := $(BINDIR)/cmd_chess
+
+TEST_BINS := $(patsubst $(TESTDIR)/%.c,$(TBINDIR)/%, $(TEST_SRCS))
 
 # Default target — must come before any includes (the -include below could
 # theoretically define targets if .d files are malformed).
@@ -90,8 +98,26 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
 	@mkdir -p $(dir $@)
 	$(CC) $(DEPFLAGS) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
+$(TBINDIR)/%: $(TESTDIR)/%.c $(SHARED_OBJS) | $(TBINDIR)
+	$(CC) $(DEPFLAGS) $(CPPFLAGS) $(TFLAGS) -o $@ $^
+
+.PHONY: test
+test: $(TEST_BINS)
+	@echo "==== Running Tests ===="
+	@failed=0; \
+	for t in $(TEST_BINS); do \
+		echo " ---- $$t ----"; \
+		$$t; \
+		if [ $$? -ne 0 ]; then failed=1; fi; \
+	done; \
+	if [ $$failed -eq 1 ]; then \
+		echo "\n **** SOME TESTS FAILED ****"; exit 1; \
+	else \
+		echo "\n==== All Tests Passed ===="; \
+	fi
+
 # Directory creation (order-only prerequisites)
-$(BUILDDIR) $(BINDIR):
+$(BUILDDIR) $(BINDIR) $(TBINDIR):
 	mkdir -p $@
 
 # Include auto-generated dependency files.
