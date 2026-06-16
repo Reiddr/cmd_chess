@@ -4,24 +4,17 @@
 
 uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d)
 {
+        /* note no north or south mask needed as the bb will over or under flow */
         uint64_t west_mask  = 0x8080808080808080;
         uint64_t east_mask  = 0x0101010101010101;
-        uint64_t north_mask = 0xFF00000000000000;
-        uint64_t south_mask = 0x00000000000000FF;
         switch (d) {
         case PM_DIR_NW:
-                if (bb & north_mask)
-                        return BB_0;
                 if (bb & west_mask)
                         return BB_0;
                 return bb << 9;
         case PM_DIR_N:
-                if (bb & north_mask)
-                        return BB_0;
                 return bb << 8;
         case PM_DIR_NE:
-                if (bb & north_mask)
-                        return BB_0;
                 if (bb & east_mask)
                         return BB_0;
                 return bb << 7;
@@ -30,18 +23,12 @@ uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d)
                         return BB_0;
                 return bb >> 1;
         case PM_DIR_SE:
-                if (bb & south_mask)
-                        return BB_0;
                 if (bb & east_mask)
                         return BB_0;
                 return bb >> 9;
         case PM_DIR_S:
-                if (bb & south_mask)
-                        return BB_0;
                 return bb >> 8;
         case PM_DIR_SW:
-                if (bb & south_mask)
-                        return BB_0;
                 if (bb & west_mask)
                         return BB_0;
                 return bb >> 7;
@@ -73,11 +60,11 @@ int pm_get_pawn_moves(const uint64_t bb, const int white, uint64_t* moves, uint6
         if (!(*moves & left_mask))
                 *captures = *moves << 1;
         if (!(*moves & right_mask))
-                *captures = *captures | (*moves >> 1);
+                *captures |= (*moves >> 1);
 
         /* shift another rank if we were on a starting square */
         if (rank_mask & bb) 
-                *moves = *moves | ((white) ? *moves << 8 : *moves >> 8);
+                *moves |= ((white) ? *moves << 8 : *moves >> 8);
 
         return 0;
 }
