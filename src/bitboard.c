@@ -95,11 +95,11 @@ int bb_get_square_str(const uint64_t bb, char* s, const size_t len_s)
 int bb_get_num_pieces(uint64_t bb)
 {
         int count = 0;
-        int i;
-        for (i = 0; i < 64; i++) { 
+        /* loop until bb is all 0s, will be max 64 times*/
+        while (bb & 0xFFFFFFFFFFFFFFFF) { 
                 if (bb & BB_1)
                         count++;
-                bb = bb >> 1;
+                bb >>= 1;
         }
         return count;
 }
