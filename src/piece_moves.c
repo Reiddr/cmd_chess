@@ -77,7 +77,7 @@ int pm_get_knight_moves(const uint64_t bb, uint64_t *moves)
         int indices[64];
         int rank, file, valid;
         int num_indices = bb_get_piece_indices(bb, indices, 64);
-        if (num_indices == 1)
+        if (num_indices != 1)
                 return 1;
 
         valid = bb_get_rank_file_from_index(indices[0], &rank, &file);
@@ -131,10 +131,10 @@ int pm_get_bishop_moves(const uint64_t bb, uint64_t *moves)
         int rank, file, valid;
         int squares_to_move, i;
         int num_indices = bb_get_piece_indices(bb, indices, 64);
-        if (num_indices < 0)
+        if (num_indices != 1)
                 return 1;
         valid = bb_get_rank_file_from_index(indices[0], &rank, &file);
-        if (valid != 1)
+        if (valid != 0)
                 return 2;
 
         /* go through the quadrants clockwise starting top left */

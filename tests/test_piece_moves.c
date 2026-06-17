@@ -26,19 +26,37 @@ int main(void)
         ASSERT(pm_slide_piece(bb, PM_DIR_W) == 0x0000000000040000, "slide piece west");
         ASSERT(pm_slide_piece(bb, PM_DIR_NW) == 0x0000000004000000, "slide piece north west");
 
-        ASSERT(pm_get_pawn_moves(bb, 0, &moves, &captures) == 0, "black pawn moves and captures");
+        ASSERT(pm_get_pawn_moves(bb, 0, &moves, &captures) == 0, "get black pawn moves and captures");
         ASSERT(moves == 0x0000000000000200, "black pawn moves");
         ASSERT(captures == 0x0000000000000500, "black pawn captures");
-        ASSERT(pm_get_pawn_moves(bb, 1, &moves, &captures) == 0, "white pawn moves and captures");
+        ASSERT(pm_get_pawn_moves(bb, 1, &moves, &captures) == 0, "get white pawn moves and captures");
         ASSERT(moves == 0x0000000002000000, "white pawn moves");
         ASSERT(captures == 0x0000000005000000, "white pawn captures");
         bb = 0x0080000000000000;
-        ASSERT(pm_get_pawn_moves(bb, 1, &moves, &captures) == 0, "white pawn moves and captures on edge");
+        ASSERT(pm_get_pawn_moves(bb, 1, &moves, &captures) == 0, "get white pawn moves and captures on edge");
         ASSERT(moves == 0x8000000000000000, "white pawn moves up the board");
         ASSERT(captures == 0x4000000000000000, "white pawn captures on edge");
-        ASSERT(pm_get_pawn_moves(bb, 0, &moves, &captures) == 0, "black pawn moves and captures on edge");
+        ASSERT(pm_get_pawn_moves(bb, 0, &moves, &captures) == 0, "get black pawn moves and captures on edge");
         ASSERT(moves == 0x0000808000000000, "black pawn moves from start");
         ASSERT(captures == 0x0000400000000000, "black pawn captures on edge");
 
+        ASSERT(pm_get_knight_moves(bb, &moves) == 0, "get knight moves in corner");
+        ASSERT(moves == 0x2000204000000000, "knight moves in corner");
+        bb = 0x0000000010000000;
+        ASSERT(pm_get_knight_moves(bb, &moves) == 0, "get knight moves in middle");
+        ASSERT(moves == 0x0000284400442800, "knight moves in middle");
+
+        ASSERT(pm_get_rook_moves(bb, &moves) == 0, "get rook moves in middle");
+        ASSERT(moves == 0x10101010EF101010, "rook moves in middle");
+        bb = 0x8000000000000000;
+        ASSERT(pm_get_rook_moves(bb, &moves) == 0, "get rook moves in corner");
+        ASSERT(moves == 0x7F80808080808080, "rook moves in corner");
+
+        ASSERT(pm_get_bishop_moves(bb, &moves) == 0, "get bishop moves in corner");
+        ASSERT(moves == 0x0040201008040201, "bishop moves in corner");
+        bb = 0x0000000200000000;
+        ASSERT(pm_get_bishop_moves(bb, &moves) == 0, "get bishop moves in middle");
+        ASSERT(moves == 0x1008050005081020, "bishop moves in middle");
+        
         return any_test_failed();
 }
