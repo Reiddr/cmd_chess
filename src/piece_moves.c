@@ -43,7 +43,7 @@ uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d)
 
 int pm_get_pawn_moves(const uint64_t bb, const int white, uint64_t* moves, uint64_t* captures)
 {
-        uint64_t rank_mask = 0xFF00;  
+        uint64_t rank_mask  = 0xFF00;
         uint64_t left_mask  = 0x8080808080808080;
         uint64_t right_mask = 0x0101010101010101;
 
@@ -55,6 +55,9 @@ int pm_get_pawn_moves(const uint64_t bb, const int white, uint64_t* moves, uint6
 
         /* advance the pawn */
         *moves = (white) ? bb << 8 : bb >> 8;
+
+        /* reset captures in case it has existing data */
+        *captures = BB_0;
 
         /* add the diagonal moves only if we aren't on an edge */
         if (!(*moves & left_mask))
