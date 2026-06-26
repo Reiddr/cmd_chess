@@ -14,9 +14,16 @@ LDFLAGS  :=
 LDLIBS   := -lm
 TFLAGS    = $(CFLAGS) -I$(TESTDIR) -g -O0
 
+# Coverage toggle, make COVERAGE=1, will only take effect if BUILD=debug is set
+COVERAGE ?= 0
+
 # Debug / Release toggle:  make BUILD=debug  or  make BUILD=release (default)
 BUILD ?= release
 ifeq ($(BUILD),debug)
+    ifeq ($(COVERAGE),1)
+	CFLAGS += --coverage
+	LDFLAGS += --coverage
+    endif
     CFLAGS += -O0 -g3 -DDEBUG
 else
     CFLAGS += -O2 -DNDEBUG
@@ -101,8 +108,16 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
 $(TBINDIR)/%: $(TESTDIR)/%.c $(SHARED_OBJS) | $(TBINDIR)
 	$(CC) $(DEPFLAGS) $(CPPFLAGS) $(TFLAGS) -o $@ $^
 
+# Test target, will clean, then run test with coverage and debug flags set
+# cleans so all files will be rebuilt with coverage enabled, fine for small project,
+# should probably be cleaned up for a large project
 .PHONY: test
-test: $(TEST_BINS)
+test: clean
+	$(MAKE) BUILD=debug COVERAGE=1 _test
+
+# Internal target, only meant to be called by test
+.PHONY: _test
+_test: $(TEST_BINS)
 	@echo "==== Running Tests ===="
 	@failed=0; \
 	for t in $(TEST_BINS); do \
