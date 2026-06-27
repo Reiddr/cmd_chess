@@ -47,3 +47,8 @@ To build run:
     - this way a central server can run the evaluation and have multiple games going at once
     - allow clients to create games, then query games and make moves, all the chess logic can be implemented by the server
 
+- Created a small database to store the games (SQL lite?)
+    - opponents named through hostname and or time so multiple games can be started with the same opponent
+
+- Aternatively do not split into server client, but opt for serverless peer to peer architechture
+    - games could be syncronised through a handshake
