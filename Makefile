@@ -148,4 +148,4 @@ bear: clean
 # Remove compiled outputs but keep the source tree intact
 .PHONY: clean
 clean:
-	$(RM) -r $(BUILDDIR)
+	$(RM) -r $(BUILDDIR) .cache/
