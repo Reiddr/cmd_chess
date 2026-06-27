@@ -15,6 +15,11 @@ int main(void)
         ASSERT(pm_slide_piece(bb, PM_DIR_SW) == BB_0, "slide BB_1 south west");
         ASSERT(pm_slide_piece(bb, PM_DIR_W) == 0x0000000000000002, "slide BB_1 west");
         ASSERT(pm_slide_piece(bb, PM_DIR_NW) == 0x0000000000000200, "slide BB_1 north west");
+        bb = 0x0000000000800000;
+        ASSERT(pm_slide_piece(bb, PM_DIR_SW) == BB_0, "slide south west off board");
+        ASSERT(pm_slide_piece(bb, PM_DIR_W) == BB_0, "slide west off board");
+        ASSERT(pm_slide_piece(bb, PM_DIR_NW) == BB_0, "slide north west off board");
+        ASSERT(pm_slide_piece(BB_1, PM_DIR_COUNT) == BB_0, "slide default case");
 
         bb = 0x0000000000020000;
         ASSERT(pm_slide_piece(bb, PM_DIR_N) == 0x0000000002000000, "slide piece north");
@@ -57,6 +62,12 @@ int main(void)
         bb = 0x0000000200000000;
         ASSERT(pm_get_bishop_moves(bb, &moves) == 0, "get bishop moves in middle");
         ASSERT(moves == 0x1008050005081020, "bishop moves in middle");
+
+        ASSERT(pm_get_queen_moves(bb, &moves) == 0, "get queen moves in middle");
+        ASSERT(moves == 0x120A07FD070A1222, "queen moves in middle");
         
+        ASSERT(pm_get_king_moves(bb, &moves) == 0, "get king moves in middle");
+        ASSERT(moves == 0x0000070507000000, "king moves in middle");
+
         return any_test_failed();
 }
