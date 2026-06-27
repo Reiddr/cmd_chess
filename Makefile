@@ -21,7 +21,7 @@ COVERAGE ?= 0
 BUILD ?= release
 ifeq ($(BUILD),debug)
     ifeq ($(COVERAGE),1)
-	CFLAGS += --coverage
+	CFLAGS += --coverage -pg
 	LDFLAGS += --coverage
     endif
     CFLAGS += -O0 -g3 -DDEBUG

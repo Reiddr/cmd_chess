@@ -4,3 +4,4 @@ build
 *.gcov
 *.gcda
 *.gcno
+*gmon*
