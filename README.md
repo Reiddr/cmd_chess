@@ -35,6 +35,12 @@ To build run:
 
 - Create a bitboard piece header and source for checking moves
 
+- Create an array or vector class to handle appending to arrays
+    - would be hard/weird to do type agnostic, could maybe use container of pattern for abstract interface
+    - would simplify top level code reading, not following data deep
+    - would simplify memory management to be in a single place, and allow for testing
+    - may not optimise perfectly as we end up with layers of abstraction
+
 - Write in game logic to restrict moves
 
 - Update the gameplay loop to allow a full game to be played between two humans
