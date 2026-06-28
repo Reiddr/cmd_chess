@@ -172,6 +172,10 @@ int pm_get_king_moves(const uint64_t bb, uint64_t *moves)
 {
         const uint64_t left_mask  = 0x8080808080808080;
         const uint64_t right_mask = 0x0101010101010101;
+        int indices[64];
+        int num_indices = bb_get_piece_indices(bb, indices, 64);
+        if (num_indices != 1)
+                return 1;
         *moves = BB_0;
         /* both N and S slides will bit shift off the board but the E and W slides will wrap */
         *moves |= pm_slide_piece(bb, PM_DIR_N);
