@@ -27,6 +27,7 @@ struct BBBoardState {
         uint64_t white_pieces[BB_T_COUNT];
         uint64_t black_pieces[BB_T_COUNT];
         int turn_white;
+        /* castling bools, 1 if true, 0 if false */
         int castling_white_king_side;
         int castling_white_queen_side;
         int castling_black_king_side;
