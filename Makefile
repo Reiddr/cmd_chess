@@ -39,6 +39,7 @@ DEPFLAGS = -MMD -MP
 # --- Sources shared by ALL executables ----------------------------------------
 SHARED_SRCS := \
     $(SRCDIR)/term_draw.c \
+    $(SRCDIR)/array.c \
     $(SRCDIR)/bitboard.c \
     $(SRCDIR)/piece_moves.c \
     $(SRCDIR)/player_input.c \

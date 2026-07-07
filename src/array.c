@@ -1,136 +1,55 @@
-#include "bitboard.h"
-#include <stdint.h>
-#include <stdio.h>
-#include <inttypes.h>
+#include "array.h"
 
-struct BBBoardState bb_init_board_state(void)
+struct array array_create(uint64_t *data, const size_t length)
 {
-        struct BBBoardState bs;
-        bs.turn_white = 1;
-        bs.castling_white_king_side = 1;
-        bs.castling_white_queen_side = 1;
-        bs.castling_black_king_side = 1;
-        bs.castling_black_queen_side = 1;
-        bs.en_passant_square = BB_0;
-        bs.halfmove_clock = 0;
-        bs.fullmove_clock = 0;
-
-	bs.white_pieces[BB_T_PAWN] 	= 0x000000000000FF00; 	/*0b1111111100000000*/
-	bs.white_pieces[BB_T_KNIGHT] 	= 0x0000000000000042; 	/*0b01000010*/
-	bs.white_pieces[BB_T_BISHOP] 	= 0x0000000000000024; 	/*0b00100100*/
-	bs.white_pieces[BB_T_ROOK] 	= 0x0000000000000081; 	/*0b10000001*/
-	bs.white_pieces[BB_T_QUEEN] 	= 0x0000000000000010; 	/*0b00010000*/
-	bs.white_pieces[BB_T_KING] 	= 0x0000000000000008; 	/*0b00001000*/
-
-	bs.black_pieces[BB_T_PAWN] 	= 0x00FF000000000000;	
-	bs.black_pieces[BB_T_KNIGHT] 	= 0x4200000000000000;
-	bs.black_pieces[BB_T_BISHOP] 	= 0x2400000000000000;
-	bs.black_pieces[BB_T_ROOK] 	= 0x8100000000000000;
-	bs.black_pieces[BB_T_QUEEN] 	= 0x0800000000000000;
-	bs.black_pieces[BB_T_KING] 	= 0x1000000000000000;
-
-        return bs;
+        struct array a;
+        a.data = data;
+        a.length = length;
+        a.index = 0;
+        return a;
 }
 
-void bb_print_binary(const uint64_t bb)
+int array_append(struct array *self, const uint64_t value)
 {
-        int rank, file;
-        printf("Bitboard hex: %016" PRIX64 "\n", bb);
-        for(rank = 7; rank > -1; rank--){
-                for(file = 7; file > -1; file--){
-                        uint64_t mask = BB_1 << (rank * 8 + file);
-                        putchar((bb & mask) ? '1' : '0');
-                }
-                putchar('\n');
-        }
-}
-
-int bb_get_piece_indices(const uint64_t bb, int* indices, const size_t len_indices)
-{
-        int index = 0;
-        int i;
-        if (len_indices < 64)
-                return -1;
-        for (i = 0; i < 64; i++){
-                uint64_t mask = BB_1 << i;
-                if (bb & mask) {
-                        indices[index++] = 63 - i; /* flip the index, as I want it to be from left to right as you look at a uint64_t */
-                }
-        }
-        return index;
-}
-
-int bb_get_rank_file_from_index(const int i, int* rank, int* file)
-{
-        if ((i < 0) || (i > 63))
+        if (self->index >=  self->length)
                 return 1;
-        *rank = 7 - i / 8;
-        *file = i % 8;
+        self->data[self->index++] = value;
         return 0;
 }
 
-int bb_get_square_str_from_index(const int i, char* s, const size_t len_s)
+int array_get(const struct array *self, uint64_t *value, const size_t index)
 {
-        int rank, file, valid;
-        if (len_s < 3)
-                return -1;
-        valid = bb_get_rank_file_from_index(i, &rank, &file);
-        if (valid == 1)
-                return -1;
-        s[0] = file + 'a';
-        s[1] = rank + '1';
-        s[2] = '\0';
-        return 3;
+        if (index > self->index)
+                return 1;
+        *value = self->data[index];
+        return 0;
 }
 
-int bb_get_square_str(const uint64_t bb, char* s, const size_t len_s)
-{
-        int indices[64];
-        int num_indices = bb_get_piece_indices(bb, indices, 64);
-        if (num_indices < 1)
-                return num_indices;
-        return bb_get_square_str_from_index(indices[0], s, len_s);
-}
-
-int bb_get_num_pieces(uint64_t bb)
-{
-        int count = 0;
-        /* loop until bb is all 0s, will be max 64 times*/
-        while (bb & 0xFFFFFFFFFFFFFFFF) { 
-                if (bb & BB_1)
-                        count++;
-                bb >>= 1;
-        }
-        return count;
-}
-
-uint64_t bb_get_mask(const uint64_t *bb, const size_t len_bb)
+int array_set(struct array *self, const uint64_t value)
 {
         size_t i;
-        uint64_t bb_out = BB_0;
-
-        if (len_bb == 0)
-                return bb_out;
-        else
-                bb_out = *bb;
-
-        for (i = 1; i < len_bb; i++)
-                bb_out |= bb[i];
-
-        return bb_out;
+        for (i = 0; i < self->length; i++)
+                self->data[i] = value;
+        self->index = 0;
+        return 0;
 }
 
-int bb_find_piece(const struct BBBoardState bs, const uint64_t start_square, BBPieceType* type, int* white)
+/* Copies number_of_elements from a into self starting from index_start
+ * performs length and index checks
+ * returns non zero on fail
+ */
+int array_copy(struct array *self, const struct array *a, const size_t index_self_start, const size_t index_a_start, const size_t number_of_elements)
 {
-        for (*type = BB_T_PAWN; *type < BB_T_COUNT; (*type)++) {
-                if (bs.white_pieces[*type] & start_square) {
-                        *white = 1;
-                        return 0;
-                }
-                if (bs.black_pieces[*type] & start_square) {
-                        *white = 0;
-                        return 0;
-                }
-        }
-        return 1;
+        size_t i;
+        if (index_self_start + number_of_elements > self->length)
+                return 1;
+        if (index_self_start + number_of_elements >= self->index)
+                return 2;
+        if (index_a_start + number_of_elements > a->length)
+                return 3;
+        if (index_a_start + number_of_elements >= a->index)
+                return 4;
+        for (i = 0; i < number_of_elements; i++)
+                self->data[i + index_self_start] = a->data[i + index_a_start];
+        return 0;
 }
