@@ -15,6 +15,15 @@ typedef enum {
         PM_DIR_COUNT
 } PMDirection;
 
+typedef enum {
+        PM_MAX_MOVES_PAWN = 3,
+        PM_MAX_MOVES_KNIGHT = 8,
+        PM_MAX_MOVES_BISHOP = 13,
+        PM_MAX_MOVES_ROOK = 14,
+        PM_MAX_MOVES_QUEEN = 27,
+        PM_MAX_MOVES_KING = 8
+} PMMaxMoves;
+
 /* function to slide a piece a single move in a direction defined by PMDirection */
 uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d);
 
