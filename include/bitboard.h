@@ -78,9 +78,16 @@ int bb_get_square_str(const uint64_t bb, char* s, const size_t len_s);
  */
 int bb_get_num_pieces(uint64_t bb);
 
+/* Get a list of masks for every piece on the bitboard
+obviously we can have max 1 everywhere so output len must be at least 64
+returns the number of masks created */
+int bb_split_masks(const uint64_t bb, uint64_t* masks, const size_t len_masks);
+
 /* A function to get a mask of all the pieces in a bitboard array
+ * Essentially OR all masks in array
+ * returns 0 on success, result is stored in bb
  */
-uint64_t bb_get_mask(const uint64_t *bb, const size_t len_bb);
+int bb_merge_masks(uint64_t *bb, const uint64_t *masks, const size_t len_bb);
 
 /* A function to take in the board state and a square return piece type and colour
  * will use the first result found, ie will not check the board state validity
