@@ -94,6 +94,6 @@ int bb_merge_masks(uint64_t *bb, const uint64_t *masks, const size_t len_bb);
  * returns 0 if allgood
  * positive if no piece is found
  */
-int bb_find_piece(const struct BBBoardState bs, const uint64_t start_square, BBPieceType* type, int* white);
+int bb_find_piece(const struct BBBoardState *bs, const uint64_t start_square, BBPieceType* type, int* white);
 
 #endif /*BITBOARD_H*/

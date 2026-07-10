@@ -132,14 +132,14 @@ int bb_merge_masks(uint64_t *bb, const uint64_t *masks, const size_t len_bb)
         return 0;
 }
 
-int bb_find_piece(const struct BBBoardState bs, const uint64_t start_square, BBPieceType* type, int* white)
+int bb_find_piece(const struct BBBoardState *bs, const uint64_t start_square, BBPieceType* type, int* white)
 {
         for (*type = BB_T_PAWN; *type < BB_T_COUNT; (*type)++) {
-                if (bs.white_pieces[*type] & start_square) {
+                if (bs->white_pieces[*type] & start_square) {
                         *white = 1;
                         return 0;
                 }
-                if (bs.black_pieces[*type] & start_square) {
+                if (bs->black_pieces[*type] & start_square) {
                         *white = 0;
                         return 0;
                 }
