@@ -2,7 +2,7 @@
 #include "bitboard.h"
 #include <stdint.h>
 
-int pi_check_move_str(const char* s)
+int pi_check_move_str(const char *s)
 {
         int i = 0;
         while (s[i++]) {
@@ -22,7 +22,7 @@ int pi_check_move_str(const char* s)
         return 0;
 }
 
-uint64_t pi_get_square(const char* s)
+uint64_t pi_get_square(const char *s)
 {
         int file = s[0] - 'a';
         int rank = s[1] - '1';
@@ -30,7 +30,7 @@ uint64_t pi_get_square(const char* s)
         return r;
 }
 
-int pi_find_piece(const struct BBBoardState bs, const char* s, uint64_t* start_square, BBPieceType* type, int* white)
+int pi_find_piece(const struct BBBoardState *bs, const char *s, uint64_t *start_square, BBPieceType *type, int *white)
 {
         *start_square = pi_get_square(s);
         return bb_find_piece(bs, *start_square, type, white);
