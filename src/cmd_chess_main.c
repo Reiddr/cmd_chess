@@ -45,7 +45,7 @@ int main(void){
                 }
 
                 /* get the piece type */
-                valid = pi_find_piece(bs, input, &start_square, &type, &white);
+                valid = pi_find_piece(&bs, input, &start_square, &type, &white);
                 if (valid !=0) {
                         printf("Did not find a piece on starting square. Your move %s\n", input);
                 }
