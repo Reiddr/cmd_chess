@@ -41,6 +41,26 @@ uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d)
         }
 }
 
+PMMaxMoves pm_get_max_moves(BBPieceType pt)
+{
+        switch (pt) {
+        case BB_T_PAWN:
+                return PM_MAX_MOVES_PAWN;
+        case BB_T_KNIGHT:
+                return PM_MAX_MOVES_KNIGHT;
+        case BB_T_BISHOP:
+                return PM_MAX_MOVES_BISHOP;
+        case BB_T_ROOK:
+                return PM_MAX_MOVES_ROOK;
+        case BB_T_QUEEN:
+                return PM_MAX_MOVES_QUEEN;
+        case BB_T_KING:
+                return PM_MAX_MOVES_KING;
+        default:
+                return 0;
+        }
+}
+
 int pm_get_pawn_moves(const uint64_t bb, const int white, uint64_t* moves, uint64_t* captures)
 {
         uint64_t rank_mask  = 0xFF00;

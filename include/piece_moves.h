@@ -2,6 +2,7 @@
 #define PIECE_MOVES_H 
 
 #include <stdint.h>
+#include "bitboard.h"
 
 typedef enum {
         PM_DIR_NW,
@@ -16,16 +17,20 @@ typedef enum {
 } PMDirection;
 
 typedef enum {
-        PM_MAX_MOVES_PAWN = 3,
+        PM_MAX_MOVES_DEFAULT = 0, /* used for special cases */
+        PM_MAX_MOVES_PAWN = 12, /* 3 * 4 because pawns can also promote to 4 different pieces, but normally 3 */
         PM_MAX_MOVES_KNIGHT = 8,
         PM_MAX_MOVES_BISHOP = 13,
         PM_MAX_MOVES_ROOK = 14,
         PM_MAX_MOVES_QUEEN = 27,
-        PM_MAX_MOVES_KING = 8
+        PM_MAX_MOVES_KING = 10 /* +2 because a king can also castle */
 } PMMaxMoves;
 
 /* function to slide a piece a single move in a direction defined by PMDirection */
 uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d);
+
+/* function to get max moves depending on the piece type */
+PMMaxMoves pm_get_max_moves(BBPieceType pt);
 
 /* The following functions will get the possible moves of the pieces
  * as if they are the only one on the board
