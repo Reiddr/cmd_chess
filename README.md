@@ -29,6 +29,8 @@ To build run:
 
 - set up clang format command in Makefile with formatting rules following the linux kernel
 
+- add a layer of moves for each piece that takes board state into account (ie blocks sliding pieces and masks pawn captures)
+
 - Add a simple gameplay loop
     - ask for a move
     - move the piece from/to the corresponding square
