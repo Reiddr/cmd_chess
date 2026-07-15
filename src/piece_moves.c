@@ -41,6 +41,18 @@ uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d)
         }
 }
 
+int pm_slide_piece_until_blocked(uint64_t bb, const PMDirection d, const uint64_t obstructions, uint64_t *moves)
+{
+        *moves = BB_0;
+        while (bb) { /* as long as we don't slide off the board */
+                bb = pm_slide_piece(bb, d);
+                *moves |= bb;
+                if (bb & obstructions)
+                        return 0;
+        }
+        return 0;
+}
+
 PMMaxMoves pm_get_max_moves(BBPieceType pt)
 {
         switch (pt) {
@@ -210,5 +222,95 @@ int pm_get_king_moves(const uint64_t bb, uint64_t *moves)
                 *moves |= pm_slide_piece(bb, PM_DIR_W);
                 *moves |= pm_slide_piece(bb, PM_DIR_SW);
         }
+        return 0;
+}
+
+int pm_get_pawn_moves_with_pieces(const uint64_t bb, const uint64_t pieces, const int white, uint64_t* moves)
+{
+        uint64_t rank2_mask  = 0xFF00;
+        uint64_t rank3_mask  = 0xFF0000;
+        uint64_t rank4_mask  = 0xFF000000;
+        uint64_t pawn_moves, pawn_captures;
+        int valid;
+
+        valid = pm_get_pawn_moves(bb, white, &pawn_moves, &pawn_captures);
+        if (valid != 0)
+                return valid;
+
+        if (!white) {
+                rank2_mask = rank2_mask << (5 * 8);
+                rank3_mask = rank3_mask << (3 * 8);
+                rank4_mask = rank4_mask << (1 * 8);
+        }
+
+        if (rank3_mask & pieces & pawn_moves) /* if there is a piece on the 3 rank in the pawns way */
+                pawn_moves = BB_0; /* then the pawn has no moves */
+        else
+                pawn_moves &= ~pieces; /* remove pawn pushes that overlap with other pieces */
+
+        *moves = pawn_moves | (pawn_captures & pieces);
+
+        return 0;
+}
+
+int pm_get_rook_moves_with_pieces(const uint64_t bb, const uint64_t pieces, uint64_t *moves)
+{
+        uint64_t tmp;
+        int indices[64];
+        int valid;
+        int num_indices = bb_get_piece_indices(bb, indices, 64);
+        if (num_indices != 1)
+                return 1;
+
+        *moves = BB_0;
+        valid = pm_slide_piece_until_blocked(bb, PM_DIR_N, pieces, &tmp);
+        *moves |= tmp;
+        valid = pm_slide_piece_until_blocked(bb, PM_DIR_S, pieces, &tmp);
+        *moves |= tmp;
+        valid = pm_slide_piece_until_blocked(bb, PM_DIR_E, pieces, &tmp);
+        *moves |= tmp;
+        valid = pm_slide_piece_until_blocked(bb, PM_DIR_W, pieces, &tmp);
+        *moves |= tmp;
+
+        if (valid != 0)
+                return 2;
+        return 0;
+}
+
+int pm_get_bishop_moves_with_pieces(const uint64_t bb, const uint64_t pieces, uint64_t *moves)
+{
+        uint64_t tmp;
+        int indices[64];
+        int valid;
+        int num_indices = bb_get_piece_indices(bb, indices, 64);
+        if (num_indices != 1)
+                return 1;
+
+        *moves = BB_0;
+        valid = pm_slide_piece_until_blocked(bb, PM_DIR_NE, pieces, &tmp);
+        *moves |= tmp;
+        valid = pm_slide_piece_until_blocked(bb, PM_DIR_NW, pieces, &tmp);
+        *moves |= tmp;
+        valid = pm_slide_piece_until_blocked(bb, PM_DIR_SE, pieces, &tmp);
+        *moves |= tmp;
+        valid = pm_slide_piece_until_blocked(bb, PM_DIR_SW, pieces, &tmp);
+        *moves |= tmp;
+
+        if (valid != 0)
+                return 2;
+        return 0;
+}
+
+int pm_get_queen_moves_with_pieces(const uint64_t bb, const uint64_t pieces, uint64_t *moves)
+{
+        int valid;
+        uint64_t bishop_moves;
+        valid = pm_get_rook_moves_with_pieces(bb, pieces, moves);
+        if (valid != 0)
+                return valid;
+        valid = pm_get_bishop_moves_with_pieces(bb, pieces, &bishop_moves);
+        if (valid != 0)
+                return valid;
+        *moves |= bishop_moves;
         return 0;
 }

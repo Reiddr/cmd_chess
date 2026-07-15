@@ -29,6 +29,14 @@ typedef enum {
 /* function to slide a piece a single move in a direction defined by PMDirection */
 uint64_t pm_slide_piece(const uint64_t bb, const PMDirection d);
 
+/* function to slide a piece and stop when it hits an obstruction
+ * puts all the valid squares into moves
+ * will include the first obstruction square
+ * returns 0 on success
+ * returns positive on fail
+ */
+int pm_slide_piece_until_blocked(uint64_t bb, const PMDirection d, const uint64_t obstructions, uint64_t *moves);
+
 /* function to get max moves depending on the piece type */
 PMMaxMoves pm_get_max_moves(BBPieceType pt);
 
@@ -75,5 +83,23 @@ int pm_get_queen_moves(const uint64_t bb, uint64_t *moves);
  * returns positive integer on fail
  */
 int pm_get_king_moves(const uint64_t bb, uint64_t *moves);
+
+/* The following functions get piece moves with respect to the board
+ * The output will still be a bitboard
+ * They take into account pieces on the board
+ * but do not differentiate between allies and enemies
+ * this is to ensure that ally pieces are 'covered'
+ * and enemy pieces are threatened
+ * sliding pieces will be blocked by pieces 
+ * pawns will take into account en passant but not promotion
+ * there is no king or knight versions as their moves don't change in this regard
+ * Return values:
+ *      0 if all good
+ *      positive integer on fail
+ */
+int pm_get_pawn_moves_with_pieces(const uint64_t bb, const uint64_t pieces, const int white, uint64_t* moves);
+int pm_get_rook_moves_with_pieces(const uint64_t bb, const uint64_t pieces, uint64_t *moves);
+int pm_get_bishop_moves_with_pieces(const uint64_t bb, const uint64_t pieces, uint64_t *moves);
+int pm_get_queen_moves_with_pieces(const uint64_t bb, const uint64_t pieces, uint64_t *moves);
 
 #endif /*PIECE_MOVES_H*/
