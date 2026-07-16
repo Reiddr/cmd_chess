@@ -227,9 +227,7 @@ int pm_get_king_moves(const uint64_t bb, uint64_t *moves)
 
 int pm_get_pawn_moves_with_pieces(const uint64_t bb, const uint64_t pieces, const int white, uint64_t* moves)
 {
-        uint64_t rank2_mask  = 0xFF00;
         uint64_t rank3_mask  = 0xFF0000;
-        uint64_t rank4_mask  = 0xFF000000;
         uint64_t pawn_moves, pawn_captures;
         int valid;
 
@@ -238,9 +236,7 @@ int pm_get_pawn_moves_with_pieces(const uint64_t bb, const uint64_t pieces, cons
                 return valid;
 
         if (!white) {
-                rank2_mask = rank2_mask << (5 * 8);
                 rank3_mask = rank3_mask << (3 * 8);
-                rank4_mask = rank4_mask << (1 * 8);
         }
 
         if (rank3_mask & pieces & pawn_moves) /* if there is a piece on the 3 rank in the pawns way */
@@ -265,11 +261,11 @@ int pm_get_rook_moves_with_pieces(const uint64_t bb, const uint64_t pieces, uint
         *moves = BB_0;
         valid = pm_slide_piece_until_blocked(bb, PM_DIR_N, pieces, &tmp);
         *moves |= tmp;
-        valid = pm_slide_piece_until_blocked(bb, PM_DIR_S, pieces, &tmp);
+        valid += pm_slide_piece_until_blocked(bb, PM_DIR_S, pieces, &tmp);
         *moves |= tmp;
-        valid = pm_slide_piece_until_blocked(bb, PM_DIR_E, pieces, &tmp);
+        valid += pm_slide_piece_until_blocked(bb, PM_DIR_E, pieces, &tmp);
         *moves |= tmp;
-        valid = pm_slide_piece_until_blocked(bb, PM_DIR_W, pieces, &tmp);
+        valid += pm_slide_piece_until_blocked(bb, PM_DIR_W, pieces, &tmp);
         *moves |= tmp;
 
         if (valid != 0)
@@ -289,11 +285,11 @@ int pm_get_bishop_moves_with_pieces(const uint64_t bb, const uint64_t pieces, ui
         *moves = BB_0;
         valid = pm_slide_piece_until_blocked(bb, PM_DIR_NE, pieces, &tmp);
         *moves |= tmp;
-        valid = pm_slide_piece_until_blocked(bb, PM_DIR_NW, pieces, &tmp);
+        valid += pm_slide_piece_until_blocked(bb, PM_DIR_NW, pieces, &tmp);
         *moves |= tmp;
-        valid = pm_slide_piece_until_blocked(bb, PM_DIR_SE, pieces, &tmp);
+        valid += pm_slide_piece_until_blocked(bb, PM_DIR_SE, pieces, &tmp);
         *moves |= tmp;
-        valid = pm_slide_piece_until_blocked(bb, PM_DIR_SW, pieces, &tmp);
+        valid += pm_slide_piece_until_blocked(bb, PM_DIR_SW, pieces, &tmp);
         *moves |= tmp;
 
         if (valid != 0)
